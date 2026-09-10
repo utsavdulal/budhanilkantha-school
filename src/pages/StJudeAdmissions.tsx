@@ -87,12 +87,13 @@ export default function StJudeAdmissions() {
             </div>
 
             {/* Right Side: Diagonally Clipped School Photo */}
-            <div className="w-full md:w-[45%] lg:w-[42%] relative min-h-[260px] md:min-h-[340px] lg:min-h-[380px] overflow-hidden bg-surface-container-lowest">
-              <div
-                className="absolute inset-0 bg-cover bg-center md:[clip-path:polygon(12%_0,100%_0,100%_100%,0%_100%)] transform duration-700 hover:scale-105"
-                style={{ backgroundImage: `url('/images/enrollment-students.jpg')` }}
+            <div className="w-full md:w-[45%] lg:w-[42%] relative min-h-[280px] md:min-h-[360px] overflow-hidden bg-surface-container-low">
+              <img
+                src="/images/enrollment-students.jpg"
+                alt="Budhanilkantha School Admissions"
+                className="w-full h-full object-cover min-h-[280px] md:min-h-[360px] transform duration-700 hover:scale-105 md:[clip-path:polygon(12%_0,100%_0,100%_100%,0%_100%)]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent md:hidden" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent md:hidden pointer-events-none" />
             </div>
 
           </div>
