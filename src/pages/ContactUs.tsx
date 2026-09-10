@@ -54,33 +54,6 @@ export default function ContactUs() {
       <Navbar />
 
       <main className="w-full pt-18 sm:pt-20 bg-surface">
-        {/* 1. HERO BANNER */}
-        <section className="relative w-full bg-primary-container text-on-primary py-space-3xl md:py-space-4xl overflow-hidden">
-          <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 relative z-10">
-            {/* Breadcrumb */}
-            <div className="flex flex-wrap items-center gap-space-sm text-caption mb-space-md text-surface-variant">
-              <Link to="/" className="hover:text-tertiary-fixed transition-colors">
-                Home
-              </Link>
-              <span>/</span>
-              <span className="text-tertiary-fixed font-semibold">Contact Us</span>
-            </div>
-
-            <div className="max-w-4xl space-y-space-md">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tertiary-fixed/20 text-tertiary-fixed font-label-caps text-[11px] uppercase tracking-widest font-bold">
-                <span className="material-symbols-outlined text-[16px]">support_agent</span>
-                <span>We're Here to Help · Admissions &amp; Campus Desk</span>
-              </div>
-              <h1 className="font-display-hero text-display-hero-mobile md:text-display-hero text-on-primary font-normal tracking-tight font-serif">
-                Get In Touch with Budhanilkantha.
-              </h1>
-              <p className="font-body-lead text-body-lead text-surface-variant max-w-3xl leading-relaxed">
-                We'd love to hear from you. Whether you have questions regarding admissions from Playgroup through Grade 10, academic curricula, fee structures, bus transportation, or hostel facilities, our administration is ready to assist you.
-              </p>
-            </div>
-          </div>
-        </section>
-
         {/* 2. CONTACT INFORMATION CARDS */}
         <section className="w-full bg-surface-container-lowest border-b border-outline-variant/30 py-space-3xl">
           <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16">
