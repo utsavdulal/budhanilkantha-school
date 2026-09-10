@@ -55,15 +55,15 @@ export default function StJudeAdmissions() {
       {/* MAIN CONTENT */}
       <main className="w-full pt-18 sm:pt-20 bg-surface">
         {/* 1. ISLINGTON-STYLE FULL-WIDTH HERO BANNER */}
-        <section className="relative w-full bg-[#0a192f] text-white py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden border-b border-outline-variant/30">
+        <section className="relative w-full bg-primary-container text-white py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden border-b border-outline-variant/30">
           {/* Background Photo */}
           <div
             className="absolute inset-0 bg-cover bg-center scale-105 transition-transform duration-1000"
             style={{ backgroundImage: `url('/images/enrollment-students.jpg')` }}
           />
           
-          {/* Cinematic Dark Gradient Overlay (Islington appointment style) */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#071324]/95 via-[#0a1d38]/90 to-[#0e274a]/80" />
+          {/* Cinematic Dark Gradient Overlay (Royal Forest Green) */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#031c12]/95 via-[#072b1d]/90 to-[#0e3d2a]/80" />
           <div className="absolute inset-0 bg-black/20 pointer-events-none" />
 
           <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 relative z-10">
