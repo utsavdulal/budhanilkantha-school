@@ -13,6 +13,17 @@ export interface GalleryItem {
   date?: string;
 }
 
+export interface FacilityItem {
+  id: string;
+  category: string;
+  title: string;
+  tag: string;
+  description: string;
+  image: string;
+  images?: string[];
+  date?: string;
+}
+
 export interface NewsArticle {
   id: string;
   category: string;
@@ -50,12 +61,18 @@ export interface ContactMessage {
 
 interface DataContextType {
   gallery: GalleryItem[];
+  facilities: FacilityItem[];
   news: NewsArticle[];
   inquiries: AdmissionInquiry[];
   messages: ContactMessage[];
   addGalleryItem: (item: Omit<GalleryItem, 'id'>) => void;
+  updateGalleryItem: (id: string, item: Partial<Omit<GalleryItem, 'id'>>) => void;
   deleteGalleryItem: (id: string) => void;
+  addFacilityItem: (item: Omit<FacilityItem, 'id'>) => void;
+  updateFacilityItem: (id: string, item: Partial<Omit<FacilityItem, 'id'>>) => void;
+  deleteFacilityItem: (id: string) => void;
   addNewsArticle: (item: Omit<NewsArticle, 'id'>) => void;
+  updateNewsArticle: (id: string, item: Partial<Omit<NewsArticle, 'id'>>) => void;
   deleteNewsArticle: (id: string) => void;
   addAdmissionInquiry: (inquiry: Omit<AdmissionInquiry, 'id' | 'date' | 'status'>) => string;
   updateInquiryStatus: (id: string, status: AdmissionInquiry['status'], notes?: string) => void;
@@ -290,6 +307,69 @@ const defaultInquiries: AdmissionInquiry[] = [
   },
 ];
 
+const defaultFacilities: FacilityItem[] = [
+  {
+    id: 'fac-grounds',
+    category: 'sports',
+    title: 'The Main Academic Grounds & Cricket Turf',
+    tag: 'Athletics & Assemblies',
+    description: 'Hosting daily morning assemblies, inter-house sports meets, and cricket training under ICC Panel Umpire Mr. Buddhi Bahadur Pradhan.',
+    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCn9o590rqwV1vZb79r7KVPGsFafoVhc85XukfuZz-gq-gnbxgLevfcY-FqOhnPrjJOPh_h85oP2I3HEcDby_GfCJFuAcZ0vDqmXnXy9i7smAj9drvbSgj6_WwgGs8kH8Ieq6sUS_rbBW7tXVtf7KOFj72p2TJnUIWr47HdBx4Ql6PkPSGyL7p2PjImXwFixt5e3KEgoljhEnMDWDgCggUP9PBrZuTXrpXX2TqqK3x2KS7ovBGTjoaUPw',
+    images: [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCn9o590rqwV1vZb79r7KVPGsFafoVhc85XukfuZz-gq-gnbxgLevfcY-FqOhnPrjJOPh_h85oP2I3HEcDby_GfCJFuAcZ0vDqmXnXy9i7smAj9drvbSgj6_WwgGs8kH8Ieq6sUS_rbBW7tXVtf7KOFj72p2TJnUIWr47HdBx4Ql6PkPSGyL7p2PjImXwFixt5e3KEgoljhEnMDWDgCggUP9PBrZuTXrpXX2TqqK3x2KS7ovBGTjoaUPw'
+    ],
+    date: 'Campus Grounds'
+  },
+  {
+    id: 'fac-auditorium',
+    category: 'auditorium',
+    title: '250-Seat Conference Hall',
+    tag: 'Academic Events',
+    description: 'Equipped with high-definition projection, surround sound, and power backup for seminars and cultural programs.',
+    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDJafTI1h_wxcTGMbWoqykqDwyaRJ3gcD1prgRqxuImLKmo6LmI13lt8FatGr_V61Ho5p1aQKNJoR0PPtMqM4dcBwBbmMBL5Z7ONgQS0im28JNR4EGF6nyo6KuU2z0lzV0OmEtlUITifBB6NrwOCHAzw5meNLN-JCGgCdWlOe5Ot9D2dNeX8Qj8iPpLM5mWDIKWaL3_Kk7KQpH0Fvke2macC7SkZNSD9IoTrRQV2alegivSIINYkLpFyw',
+    images: [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDJafTI1h_wxcTGMbWoqykqDwyaRJ3gcD1prgRqxuImLKmo6LmI13lt8FatGr_V61Ho5p1aQKNJoR0PPtMqM4dcBwBbmMBL5Z7ONgQS0im28JNR4EGF6nyo6KuU2z0lzV0OmEtlUITifBB6NrwOCHAzw5meNLN-JCGgCdWlOe5Ot9D2dNeX8Qj8iPpLM5mWDIKWaL3_Kk7KQpH0Fvke2macC7SkZNSD9IoTrRQV2alegivSIINYkLpFyw'
+    ],
+    date: 'Conference Wing'
+  },
+  {
+    id: 'fac-preprimary',
+    category: 'preprimary',
+    title: "Kids' Entertainment Hall",
+    tag: 'Pre-Primary',
+    description: 'Bright colorful early childhood playgroup classroom with educational games and interactive learning screens.',
+    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAK0zp2C1S9Em97K8YCxklerWYzmvk9Ci8W1QI4u-0rUxdvQ0rRQt1Z4WsTr1kpJiKFZ5Uv5tBahXHE1kGFmPbYuyIEBiYFDiu2cA6iZ2SA7V-YRbIIHdfPahf_I04d286E2fFYe9b_wtT94WoV5HpmtU_My4nT-hFFMrk8gdXuSAsBJdYcGKK2cJqo9y8euLPbGLtQeUaVaxDsVkxP6-8qbV2ZdBGgGAgLkmGSog9D02KcPIIsaDzLYg',
+    images: [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAK0zp2C1S9Em97K8YCxklerWYzmvk9Ci8W1QI4u-0rUxdvQ0rRQt1Z4WsTr1kpJiKFZ5Uv5tBahXHE1kGFmPbYuyIEBiYFDiu2cA6iZ2SA7V-YRbIIHdfPahf_I04d286E2fFYe9b_wtT94WoV5HpmtU_My4nT-hFFMrk8gdXuSAsBJdYcGKK2cJqo9y8euLPbGLtQeUaVaxDsVkxP6-8qbV2ZdBGgGAgLkmGSog9D02KcPIIsaDzLYg'
+    ],
+    date: 'Junior Wing'
+  },
+  {
+    id: 'fac-stem',
+    category: 'labs',
+    title: 'Computer & Robotics Lab',
+    tag: 'Technology & STEM',
+    description: 'High-speed computer workstations and practical microcontroller robotics engineering facilities.',
+    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBOOnX_orATVmXQwbOco-ogbBxGQfqxh7smQo6Nq9tDBemSkRPgVQdsAwsjmydsOKBkiKvKk1tg8CZt9ZE8ZW6hl1ytDPVxGTEYHlplm0c6zuVEU_uoNbejWHo_mXriKhJ1rfl1u1VTE8TyJexcnbpcqfvmOsh4ZN_bqN65iY_PQA-5mmIsaXvVopyM3hZiNSawAxtKTdYfBVVw89IIvV2sD_fKUiXiBERpCcIEw9DQuoBVVMyZmry-8g',
+    images: [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBOOnX_orATVmXQwbOco-ogbBxGQfqxh7smQo6Nq9tDBemSkRPgVQdsAwsjmydsOKBkiKvKk1tg8CZt9ZE8ZW6hl1ytDPVxGTEYHlplm0c6zuVEU_uoNbejWHo_mXriKhJ1rfl1u1VTE8TyJexcnbpcqfvmOsh4ZN_bqN65iY_PQA-5mmIsaXvVopyM3hZiNSawAxtKTdYfBVVw89IIvV2sD_fKUiXiBERpCcIEw9DQuoBVVMyZmry-8g'
+    ],
+    date: 'Innovation Center'
+  },
+  {
+    id: 'fac-hostel',
+    category: 'hostel',
+    title: 'Hostel & Dining Hall',
+    tag: 'Residential Facility',
+    description: 'Comfortable, secure, and hygienic boarding environment with nutritious meal services and 24/7 supervision.',
+    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDvgdYKp94u7wiW_Rj92sSyqQ9KLugssbruvUKojY2o5sXOWSPMwC3xbAwIsMBDo2jKQ0p5IKVudv8sQMmLUXbp3mwbr43iIqcC0b111TN6rqCpxZdlU8SQOrGS29LZgPhspzHHHbMzu58pVg6b5Do4XQarPVLXlt3GAQoCNBTvr2i8y0VzKDlJJ30qViwUCwmY0mTubUDRIJirdZbiZNeLZ3GBpAiey0yftVhVrkQH0y7j736vn3Mg6Q',
+    images: [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDvgdYKp94u7wiW_Rj92sSyqQ9KLugssbruvUKojY2o5sXOWSPMwC3xbAwIsMBDo2jKQ0p5IKVudv8sQMmLUXbp3mwbr43iIqcC0b111TN6rqCpxZdlU8SQOrGS29LZgPhspzHHHbMzu58pVg6b5Do4XQarPVLXlt3GAQoCNBTvr2i8y0VzKDlJJ30qViwUCwmY0mTubUDRIJirdZbiZNeLZ3GBpAiey0yftVhVrkQH0y7j736vn3Mg6Q'
+    ],
+    date: 'Boarding Wing'
+  }
+];
+
 const defaultMessages: ContactMessage[] = [
   {
     id: 'msg-101',
@@ -323,6 +403,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return saved ? JSON.parse(saved) : defaultGallery;
   });
 
+  const [facilities, setFacilities] = useState<FacilityItem[]>(() => {
+    const saved = localStorage.getItem('bks_facilities');
+    return saved ? JSON.parse(saved) : defaultFacilities;
+  });
+
   const [news, setNews] = useState<NewsArticle[]>(() => {
     const saved = localStorage.getItem('bks_news');
     return saved ? JSON.parse(saved) : defaultNews;
@@ -341,6 +426,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     localStorage.setItem('bks_gallery', JSON.stringify(gallery));
   }, [gallery]);
+
+  useEffect(() => {
+    localStorage.setItem('bks_facilities', JSON.stringify(facilities));
+  }, [facilities]);
 
   useEffect(() => {
     localStorage.setItem('bks_news', JSON.stringify(news));
@@ -362,8 +451,32 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setGallery((prev) => [newItem, ...prev]);
   };
 
+  const updateGalleryItem = (id: string, updated: Partial<Omit<GalleryItem, 'id'>>) => {
+    setGallery((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, ...updated } : item))
+    );
+  };
+
   const deleteGalleryItem = (id: string) => {
     setGallery((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const addFacilityItem = (item: Omit<FacilityItem, 'id'>) => {
+    const newItem: FacilityItem = {
+      ...item,
+      id: 'fac-' + Date.now(),
+    };
+    setFacilities((prev) => [newItem, ...prev]);
+  };
+
+  const updateFacilityItem = (id: string, updated: Partial<Omit<FacilityItem, 'id'>>) => {
+    setFacilities((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, ...updated } : item))
+    );
+  };
+
+  const deleteFacilityItem = (id: string) => {
+    setFacilities((prev) => prev.filter((item) => item.id !== id));
   };
 
   const addNewsArticle = (item: Omit<NewsArticle, 'id'>) => {
@@ -372,6 +485,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       id: 'news-' + Date.now(),
     };
     setNews((prev) => [newItem, ...prev]);
+  };
+
+  const updateNewsArticle = (id: string, updated: Partial<Omit<NewsArticle, 'id'>>) => {
+    setNews((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, ...updated } : item))
+    );
   };
 
   const deleteNewsArticle = (id: string) => {
@@ -425,10 +544,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const resetToDefaults = () => {
     setGallery(defaultGallery);
+    setFacilities(defaultFacilities);
     setNews(defaultNews);
     setInquiries(defaultInquiries);
     setMessages(defaultMessages);
     localStorage.removeItem('bks_gallery');
+    localStorage.removeItem('bks_facilities');
     localStorage.removeItem('bks_news');
     localStorage.removeItem('bks_inquiries');
     localStorage.removeItem('bks_messages');
@@ -438,12 +559,18 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <DataContext.Provider
       value={{
         gallery,
+        facilities,
         news,
         inquiries,
         messages,
         addGalleryItem,
+        updateGalleryItem,
         deleteGalleryItem,
+        addFacilityItem,
+        updateFacilityItem,
+        deleteFacilityItem,
         addNewsArticle,
+        updateNewsArticle,
         deleteNewsArticle,
         addAdmissionInquiry,
         updateInquiryStatus,

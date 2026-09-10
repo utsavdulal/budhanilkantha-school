@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 export default function SecondaryAcademics() {
   const [selectedSubjectTab, setSelectedSubjectTab] = useState<'compulsory' | 'optional'>('compulsory');
@@ -23,7 +24,7 @@ export default function SecondaryAcademics() {
   return (
     <div className="min-h-screen bg-surface font-body-md text-body-md text-on-surface antialiased selection:bg-tertiary-fixed selection:text-tertiary">
       <Navbar />
-      <main className="w-full pt-28 bg-surface">
+      <main className="w-full pt-18 sm:pt-20 bg-surface">
         <div className="flex flex-col w-full">
           {/* 1. HERO SECTION */}
           <section className="w-full bg-surface-container-lowest px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 py-space-3xl border-b border-outline-variant/30">
@@ -317,21 +318,7 @@ export default function SecondaryAcademics() {
       </main>
 
       {/* FOOTER */}
-      <footer className="w-full bg-surface-container-low border-t border-outline-variant/30 text-on-surface py-space-3xl px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16">
-        <div className="max-w-container-max mx-auto flex flex-col sm:flex-row items-center justify-between gap-space-md text-caption text-secondary">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-primary">Budhanilkantha Secondary English School</span>
-            <span>· Shankarpur, Biratnagar-2</span>
-          </div>
-          <div className="flex items-center gap-space-md font-medium">
-            <Link to="/academics/pre-primary" className="hover:text-primary">Kids School (PG–UKG)</Link>
-            <span>•</span>
-            <Link to="/academics/primary" className="hover:text-primary">Primary Level (1–5)</Link>
-            <span>•</span>
-            <Link to="/admissions" className="text-primary font-bold hover:underline">Admissions</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

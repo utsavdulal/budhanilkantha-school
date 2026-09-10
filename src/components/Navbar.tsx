@@ -58,34 +58,6 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      {/* Top Announcement Ribbon */}
-      <div className="bg-primary-container text-on-primary py-1.5 sm:py-space-xs border-b border-on-primary-fixed-variant/30">
-        <div className="w-full px-3 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 flex flex-col sm:flex-row items-center justify-between text-caption gap-1">
-          <div className="flex items-center space-x-2 text-center sm:text-left">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-pulse shrink-0"></span>
-            <span className="font-medium tracking-wide text-on-primary text-[11px] sm:text-[13px]">
-              Admissions Open 2081/2082 (PG to Grade 10)
-            </span>
-          </div>
-          <div className="flex items-center space-x-2 sm:space-x-space-md text-[11px] sm:text-[13px]">
-            <a href="tel:021514168" className="text-tertiary-fixed font-medium inline-flex items-center gap-1 hover:underline">
-              <span>Tel: 021-514168</span>
-            </a>
-            <span className="text-on-primary-container opacity-40">|</span>
-            <span className="text-on-primary-container hidden md:inline">
-              Shankarpur, Biratnagar-2
-            </span>
-            <Link
-              className="text-tertiary-fixed hover:text-tertiary-fixed-dim transition-colors inline-flex items-center gap-1 font-semibold underline underline-offset-2"
-              to="/admissions"
-            >
-              <span>Inquire Online</span>
-              <span className="text-[10px]">→</span>
-            </Link>
-          </div>
-        </div>
-      </div>
-
       {/* Main Navbar */}
       <div className="h-18 sm:h-20 bg-surface/95 backdrop-blur-md border-b border-outline-variant/30 shadow-[0_1px_8px_rgba(15,30,54,0.04)]">
         <div className="w-full h-full px-3 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 flex items-center justify-between gap-2 sm:gap-space-lg">

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import { useData } from '../context/DataContext';
 
 export default function ContactUs() {
@@ -52,7 +53,7 @@ export default function ContactUs() {
     <div className="min-h-screen bg-surface font-body-md text-body-md text-on-surface antialiased selection:bg-tertiary-fixed selection:text-tertiary">
       <Navbar />
 
-      <main className="w-full pt-28 bg-surface">
+      <main className="w-full pt-18 sm:pt-20 bg-surface">
         {/* 1. HERO BANNER */}
         <section className="relative w-full bg-primary-container text-on-primary py-space-3xl md:py-space-4xl overflow-hidden">
           <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 relative z-10">
@@ -405,34 +406,7 @@ export default function ContactUs() {
       </main>
 
       {/* FOOTER */}
-      <footer className="w-full bg-surface-container-low border-t border-outline-variant/30 text-on-surface py-space-4xl">
-        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 flex flex-col sm:flex-row items-center justify-between text-caption text-on-surface-variant gap-space-sm">
-          <p>
-            © 2026 Budhanilkantha Secondary English School (बुढानिलकण्ठ विद्यालय). All rights reserved.
-            Shankarpur, Biratnagar-2, Morang, Nepal.
-          </p>
-          <div className="flex items-center space-x-space-md font-medium">
-            <Link className="hover:text-primary transition-colors" to="/about">
-              About
-            </Link>
-            <Link className="hover:text-primary transition-colors" to="/academics/pre-primary">
-              Kids School
-            </Link>
-            <Link className="hover:text-primary transition-colors" to="/academics/primary">
-              Primary
-            </Link>
-            <Link className="hover:text-primary transition-colors" to="/academics/secondary">
-              Secondary
-            </Link>
-            <Link className="hover:text-primary transition-colors" to="/contact">
-              Contact
-            </Link>
-            <Link className="text-primary font-bold hover:underline" to="/admissions">
-              Enroll Now
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

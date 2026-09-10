@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 export default function StJudeHome() {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -93,7 +94,7 @@ export default function StJudeHome() {
       <Navbar />
 
       {/* MAIN CONTENT WRAPPER */}
-      <main className="w-full pt-28 bg-surface">
+      <main className="w-full pt-18 sm:pt-20 bg-surface">
         <div className="flex flex-col w-full">
           {/* 1. HERO SECTION */}
           <section className="relative w-full overflow-hidden bg-primary-container min-h-[78vh] lg:min-h-[74vh] flex items-center">
@@ -535,173 +536,7 @@ export default function StJudeHome() {
       </main>
 
       {/* FOOTER */}
-      <footer className="w-full bg-surface-container-low border-t border-outline-variant/30 text-on-surface">
-        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 py-space-4xl">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-space-2xl">
-            <div className="md:col-span-4 space-y-space-md">
-              <div className="flex items-center gap-space-md">
-                <div className="w-10 h-10 rounded bg-primary-container text-tertiary-fixed flex items-center justify-center font-headline-md text-[20px] font-bold border border-tertiary-fixed/30">
-                  B
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-headline-sm text-headline-sm text-primary leading-tight font-serif font-bold">
-                    Budhanilkantha Secondary School
-                  </span>
-                  <span className="font-caption text-caption text-secondary">
-                    बुढानिलकण्ठ विद्यालय • Estd. 2040 B.S.
-                  </span>
-                </div>
-              </div>
-              <p className="font-body-sm text-body-sm text-on-surface-variant max-w-sm leading-relaxed">
-                A leading English medium secondary school in Biratnagar dedicated to academic rigor,
-                character building, science and robotics innovation, and sports excellence since 1983 A.D.
-                (2040 B.S.).
-              </p>
-              <div className="pt-space-xs space-y-2 text-caption font-caption text-on-surface-variant">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[16px] text-secondary">location_on</span>
-                  <span>Shankarpur, Biratnagar-2, Morang, Koshi Province, Nepal</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[16px] text-secondary">call</span>
-                  <span>Direct Telephone: 021-514168</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[16px] text-secondary">pin_drop</span>
-                  <span>Google Plus Code: F7CM+43 Biratnagar</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="md:col-span-2">
-              <h3 className="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-md font-bold">
-                Academic Wings
-              </h3>
-              <ul className="space-y-space-sm font-body-sm text-body-sm text-on-surface-variant">
-                <li>
-                  <Link className="hover:text-primary transition-colors" to="/academics#pre-primary">
-                    Pre-Primary (PG–UKG)
-                  </Link>
-                </li>
-                <li>
-                  <Link className="hover:text-primary transition-colors" to="/academics#primary-level">
-                    Primary Wing (1–5)
-                  </Link>
-                </li>
-                <li>
-                  <Link className="hover:text-primary transition-colors" to="/academics#secondary-level">
-                    Secondary Level (6–10)
-                  </Link>
-                </li>
-                <li>
-                  <Link className="hover:text-primary transition-colors" to="/admissions">
-                    Admissions Open
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div className="md:col-span-2">
-              <h3 className="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-md font-bold">
-                Explore More
-              </h3>
-              <ul className="space-y-space-sm font-body-sm text-body-sm text-on-surface-variant">
-                <li>
-                  <Link className="hover:text-primary transition-colors" to="/facilities">
-                    Campus Facilities
-                  </Link>
-                </li>
-                <li>
-                  <Link className="hover:text-primary transition-colors" to="/student-life">
-                    Student Life &amp; Sports
-                  </Link>
-                </li>
-                <li>
-                  <Link className="hover:text-primary transition-colors" to="/student-life#robotics">
-                    Robotics &amp; Innovation
-                  </Link>
-                </li>
-                <li>
-                  <Link className="hover:text-primary transition-colors" to="/news-events">
-                    News &amp; Events
-                  </Link>
-                </li>
-                <li>
-                  <Link className="hover:text-primary transition-colors" to="/about">
-                    About Our Legacy
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div className="md:col-span-4 space-y-space-md">
-              <h3 className="font-label-caps text-label-caps text-primary tracking-widest uppercase font-bold">
-                Admissions &amp; Inquiries
-              </h3>
-              <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                Receive admissions notices, academic calendar updates, and examination schedules directly.
-              </p>
-              <form
-                className="flex items-center gap-space-2xs"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  alert('Thank you for inquiring! We will contact you soon.');
-                }}
-              >
-                <input
-                  className="w-full h-11 px-space-md bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary transition-colors"
-                  placeholder="Enter your phone or email"
-                  type="text"
-                  required
-                />
-                <button
-                  className="h-11 px-space-md bg-primary-container hover:bg-primary text-on-primary font-label-caps text-label-caps uppercase tracking-wider rounded-lg shrink-0 transition-colors font-bold"
-                  type="submit"
-                >
-                  Inquire
-                </button>
-              </form>
-              <div className="pt-space-xs">
-                <span className="font-label-caps text-[10px] uppercase text-secondary tracking-widest block mb-space-xs font-semibold">
-                  Accredited &amp; Affiliated with
-                </span>
-                <div className="flex items-center gap-space-md text-caption text-secondary flex-wrap">
-                  <span className="border border-outline-variant/60 px-space-xs py-space-2xs rounded bg-surface">
-                    Ministry of Education
-                  </span>
-                  <span className="border border-outline-variant/60 px-space-xs py-space-2xs rounded bg-surface">
-                    SEE Board Nepal
-                  </span>
-                  <span className="border border-outline-variant/60 px-space-xs py-space-2xs rounded bg-surface">
-                    Biratnagar-2 Ward
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-space-3xl pt-space-md border-t border-outline-variant/30 flex flex-col sm:flex-row items-center justify-between text-caption text-on-surface-variant gap-space-sm">
-            <p>
-              © 2026 Budhanilkantha Secondary English School (बुढानिलकण्ठ विद्यालय). All rights reserved.
-              Shankarpur, Biratnagar-2, Morang, Nepal.
-            </p>
-            <div className="flex items-center space-x-space-md">
-              <Link className="hover:text-on-surface transition-colors" to="/about">
-                About School
-              </Link>
-              <Link className="hover:text-on-surface transition-colors" to="/academics">
-                Curriculum
-              </Link>
-              <Link className="hover:text-on-surface transition-colors" to="/contact">
-                Contact Us
-              </Link>
-              <Link className="hover:text-primary transition-colors font-bold text-primary" to="/admin">
-                Admin Portal
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useData, type AdmissionInquiry, type ContactMessage } from '../../context/DataContext';
+import { useData, type AdmissionInquiry, type ContactMessage, type FacilityItem, type GalleryItem, type NewsArticle } from '../../context/DataContext';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const {
     gallery,
+    facilities,
     news,
     inquiries,
     messages,
     addGalleryItem,
+    updateGalleryItem,
     deleteGalleryItem,
+    addFacilityItem,
+    updateFacilityItem,
+    deleteFacilityItem,
     addNewsArticle,
+    updateNewsArticle,
     deleteNewsArticle,
     updateInquiryStatus,
     deleteInquiry,
@@ -20,14 +26,23 @@ export default function AdminDashboard() {
     resetToDefaults,
   } = useData();
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'gallery' | 'news' | 'inquiries' | 'messages' | 'settings'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'facilities' | 'gallery' | 'news' | 'inquiries' | 'messages' | 'settings'>('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [globalSearch, setGlobalSearch] = useState('');
 
-  // Selected item modals / notes
+  // Selected item modals / notes / edit modals
   const [activeNotesInquiry, setActiveNotesInquiry] = useState<AdmissionInquiry | null>(null);
   const [inquiryNoteInput, setInquiryNoteInput] = useState('');
   const [activeViewMessage, setActiveViewMessage] = useState<ContactMessage | null>(null);
+
+  // Edit states for uploaded items
+  const [editingFacility, setEditingFacility] = useState<FacilityItem | null>(null);
+  const [editFacilityUrlInput, setEditFacilityUrlInput] = useState('');
+
+  const [editingGallery, setEditingGallery] = useState<GalleryItem | null>(null);
+  const [editGalleryUrlInput, setEditGalleryUrlInput] = useState('');
+
+  const [editingNews, setEditingNews] = useState<NewsArticle | null>(null);
 
   // Authentication check
   useEffect(() => {
@@ -40,6 +55,120 @@ export default function AdminDashboard() {
   const handleLogout = () => {
     localStorage.removeItem('bks_admin_auth');
     navigate('/admin/login');
+  };
+
+  // --- Facilities Form State ---
+  const [facilityForm, setFacilityForm] = useState({
+    title: '',
+    category: 'sports',
+    tag: 'Athletics & Sports',
+    description: '',
+    image: '',
+    images: [] as string[],
+    date: 'Shankarpur Campus',
+  });
+  const [singleFacilityImageUrlInput, setSingleFacilityImageUrlInput] = useState('');
+  const [facilitySuccess, setFacilitySuccess] = useState('');
+  const [facilityFilter, setFacilityFilter] = useState('all');
+
+  const handleFacilitySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const allImages =
+      facilityForm.images.length > 0
+        ? facilityForm.images
+        : facilityForm.image.trim()
+        ? [facilityForm.image.trim()]
+        : [];
+
+    if (!facilityForm.title.trim() || allImages.length === 0) {
+      alert('Please provide at least a Title and at least one Facility Image URL or file upload.');
+      return;
+    }
+
+    addFacilityItem({
+      title: facilityForm.title,
+      category: facilityForm.category,
+      tag: facilityForm.tag || 'Campus Facility',
+      description: facilityForm.description || facilityForm.title,
+      image: allImages[0],
+      images: allImages,
+      date: facilityForm.date,
+    });
+
+    setFacilitySuccess(`Facility "${facilityForm.title}" with ${allImages.length} photo(s) added successfully!`);
+    setFacilityForm({
+      title: '',
+      category: 'sports',
+      tag: 'Athletics & Sports',
+      description: '',
+      image: '',
+      images: [],
+      date: 'Shankarpur Campus',
+    });
+    setSingleFacilityImageUrlInput('');
+    setTimeout(() => setFacilitySuccess(''), 4000);
+  };
+
+  const handleFacilityMultiFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      Array.from(files).forEach((file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (typeof reader.result === 'string') {
+            const resultStr = reader.result;
+            setFacilityForm((prev) => {
+              const updatedImages = [...prev.images, resultStr];
+              return {
+                ...prev,
+                images: updatedImages,
+                image: prev.image || updatedImages[0],
+              };
+            });
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  const handleAddFacilityImageUrl = () => {
+    if (singleFacilityImageUrlInput.trim()) {
+      const url = singleFacilityImageUrlInput.trim();
+      setFacilityForm((prev) => {
+        const updatedImages = [...prev.images, url];
+        return {
+          ...prev,
+          images: updatedImages,
+          image: prev.image || updatedImages[0],
+        };
+      });
+      setSingleFacilityImageUrlInput('');
+    }
+  };
+
+  const handleRemoveFacilityImage = (index: number) => {
+    setFacilityForm((prev) => {
+      const updatedImages = prev.images.filter((_, i) => i !== index);
+      return {
+        ...prev,
+        images: updatedImages,
+        image: updatedImages.length > 0 ? updatedImages[0] : '',
+      };
+    });
+  };
+
+  const handleSetFacilityCoverImage = (index: number) => {
+    setFacilityForm((prev) => {
+      const selected = prev.images[index];
+      const rest = prev.images.filter((_, i) => i !== index);
+      const reordered = [selected, ...rest];
+      return {
+        ...prev,
+        images: reordered,
+        image: selected,
+      };
+    });
   };
 
   // --- Gallery Form State ---
@@ -303,6 +432,7 @@ export default function AdminDashboard() {
               { key: 'overview', label: 'Dashboard Overview', icon: 'dashboard', badge: null },
               { key: 'inquiries', label: 'Admission Inquiries', icon: 'how_to_reg', badge: newInquiriesCount ? `${newInquiriesCount} new` : null, alert: Boolean(newInquiriesCount) },
               { key: 'messages', label: 'Contact Messages', icon: 'mail', badge: unreadMessagesCount ? `${unreadMessagesCount} unread` : null, alert: Boolean(unreadMessagesCount) },
+              { key: 'facilities', label: 'Facilities Manager', icon: 'domain', badge: facilities.length, alert: false },
               { key: 'gallery', label: 'Gallery Manager', icon: 'photo_library', badge: gallery.length, alert: false },
               { key: 'news', label: 'News & Notices', icon: 'newspaper', badge: news.length, alert: false },
               { key: 'settings', label: 'System Settings', icon: 'settings', badge: null, alert: false },
@@ -727,6 +857,354 @@ export default function AdminDashboard() {
           )}
 
           {/* ========================================================================= */}
+          {/* TAB: FACILITIES MANAGER (Multi-Image & Infrastructure Manager) */}
+          {/* ========================================================================= */}
+          {activeTab === 'facilities' && (
+            <div className="space-y-8 animate-fadeIn">
+              {/* Header Title */}
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-headline font-extrabold text-on-surface tracking-tight">
+                    Campus Facilities Manager
+                  </h2>
+                  <p className="text-xs text-on-surface-variant mt-0.5">
+                    Upload and manage campus facilities, infrastructure highlights, and multiple photographs for each space.
+                  </p>
+                </div>
+                <Link
+                  to="/facilities"
+                  target="_blank"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-xs font-bold rounded-sm border border-outline-variant/20 transition-all"
+                >
+                  <span>View Public Facilities Page</span>
+                  <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                </Link>
+              </div>
+
+              {facilitySuccess && (
+                <div className="p-3.5 bg-emerald-50 border-l-4 border-emerald-600 text-xs font-bold text-emerald-900 flex items-center gap-2 rounded-sm">
+                  <span className="material-symbols-outlined text-[18px] text-emerald-600">check_circle</span>
+                  <span>{facilitySuccess}</span>
+                </div>
+              )}
+
+              {/* Upload Card */}
+              <div className="bg-white p-6 rounded-sm border border-outline-variant/20 shadow-xs space-y-5">
+                <div className="border-b border-outline-variant/15 pb-3">
+                  <h3 className="font-headline font-bold text-base text-on-surface">
+                    Add New Facility or Building Showcase
+                  </h3>
+                  <p className="text-xs text-on-surface-variant">
+                    Upload multiple photographs, specify category, and describe the facility.
+                  </p>
+                </div>
+
+                <form onSubmit={handleFacilitySubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Category */}
+                    <div>
+                      <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                        Facility Category
+                      </label>
+                      <select
+                        value={facilityForm.category}
+                        onChange={(e) => {
+                          const cat = e.target.value;
+                          const tagMap: Record<string, string> = {
+                            sports: 'Athletics & Assemblies',
+                            auditorium: 'Academic Events',
+                            preprimary: 'Pre-Primary',
+                            labs: 'Technology & STEM',
+                            hostel: 'Residential Facility',
+                            academics: 'Classrooms & Library',
+                          };
+                          setFacilityForm({ ...facilityForm, category: cat, tag: tagMap[cat] || 'Campus Facility' });
+                        }}
+                        className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs font-medium text-on-surface focus:ring-1 focus:ring-black"
+                      >
+                        <option value="sports">Athletics &amp; Sports Grounds</option>
+                        <option value="auditorium">Auditorium &amp; Conference Hall</option>
+                        <option value="preprimary">Pre-Primary &amp; Kids Entertainment</option>
+                        <option value="labs">Computer &amp; Robotics Labs</option>
+                        <option value="hostel">Hostel &amp; Dining Hall</option>
+                        <option value="academics">Classrooms &amp; Library</option>
+                      </select>
+                    </div>
+
+                    {/* Tag */}
+                    <div>
+                      <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                        Display Tag Badge
+                      </label>
+                      <input
+                        type="text"
+                        value={facilityForm.tag}
+                        onChange={(e) => setFacilityForm({ ...facilityForm, tag: e.target.value })}
+                        placeholder="e.g. Athletics & Assemblies"
+                        className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                      Facility Name / Title
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={facilityForm.title}
+                      onChange={(e) => setFacilityForm({ ...facilityForm, title: e.target.value })}
+                      placeholder="e.g. 250-Seat Digital Conference Hall"
+                      className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black font-medium"
+                    />
+                  </div>
+
+                  {/* MULTI-IMAGE UPLOAD AREA */}
+                  <div className="p-4 bg-surface-container-low/40 rounded-sm border border-outline-variant/20 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-[11px] font-bold text-on-surface uppercase tracking-wider">
+                        Facility Photographs (Upload Multiple)
+                      </label>
+                      {facilityForm.images.length > 0 && (
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-sm bg-black text-white flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[13px]">photo_library</span>
+                          <span>{facilityForm.images.length} Photos Selected</span>
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+                      <div className="sm:col-span-8 flex gap-2">
+                        <input
+                          type="text"
+                          value={singleFacilityImageUrlInput}
+                          onChange={(e) => setSingleFacilityImageUrlInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              handleAddFacilityImageUrl();
+                            }
+                          }}
+                          placeholder="Paste image URL (https://...) and click Add"
+                          className="flex-1 px-3 py-2 bg-white border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleAddFacilityImageUrl}
+                          className="px-3.5 py-2 bg-black hover:bg-neutral-800 text-white rounded-sm text-xs font-bold transition-colors shrink-0 flex items-center gap-1 cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined text-[15px]">add</span>
+                          <span>Add URL</span>
+                        </button>
+                      </div>
+
+                      <div className="sm:col-span-4">
+                        <label className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-sm text-xs font-bold cursor-pointer transition-colors border border-outline-variant/30 shadow-xs">
+                          <span className="material-symbols-outlined text-[16px]">upload_file</span>
+                          <span>Select Multiple Files</span>
+                          <input
+                            type="file"
+                            multiple
+                            accept="image/*"
+                            onChange={handleFacilityMultiFileUpload}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Uploaded Facility Thumbnails Preview */}
+                    {facilityForm.images.length > 0 ? (
+                      <div className="pt-2">
+                        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2.5">
+                          {facilityForm.images.map((imgUrl, idx) => (
+                            <div
+                              key={idx}
+                              className={`relative group rounded-sm overflow-hidden border bg-black h-20 ${
+                                idx === 0 ? 'border-2 border-black ring-2 ring-black/10' : 'border-outline-variant/40'
+                              }`}
+                            >
+                              <img
+                                src={imgUrl}
+                                alt={`Facility photo ${idx + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                              {idx === 0 && (
+                                <span className="absolute top-1 left-1 bg-black text-white text-[8px] uppercase font-bold px-1 py-0.2 rounded-sm shadow">
+                                  Cover
+                                </span>
+                              )}
+                              <span className="absolute bottom-1 left-1 bg-black/70 text-white text-[9px] px-1 rounded-sm">
+                                #{idx + 1}
+                              </span>
+                              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                                {idx !== 0 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleSetFacilityCoverImage(idx)}
+                                    title="Make this photo the Cover"
+                                    className="p-1 bg-white hover:bg-gray-100 text-black rounded-sm text-[10px] font-bold shadow cursor-pointer"
+                                  >
+                                    <span className="material-symbols-outlined text-[14px]">star</span>
+                                  </button>
+                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveFacilityImage(idx)}
+                                  title="Remove photo"
+                                  className="p-1 bg-red-600 hover:bg-red-700 text-white rounded-sm text-[10px] font-bold shadow cursor-pointer"
+                                >
+                                  <span className="material-symbols-outlined text-[14px]">delete</span>
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-[11px] text-on-surface-variant text-center py-2">
+                        No photos added yet. Use file selector to choose multiple photos or paste image URLs.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Description */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                      Facility Description &amp; Highlights
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={facilityForm.description}
+                      onChange={(e) => setFacilityForm({ ...facilityForm, description: e.target.value })}
+                      placeholder="Describe features, equipment, capacity, and student benefits..."
+                      className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black leading-relaxed"
+                    />
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      className="px-6 py-2 bg-black hover:bg-neutral-800 text-white rounded-sm font-label text-xs uppercase tracking-widest font-bold transition-all shadow-sm cursor-pointer"
+                    >
+                      Publish Facility
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* Published Facilities Items Grid */}
+              <div className="bg-white rounded-sm border border-outline-variant/20 shadow-xs overflow-hidden">
+                <div className="p-4 sm:p-5 border-b border-outline-variant/20 flex flex-wrap items-center justify-between gap-4 bg-surface-container-low/30">
+                  <div>
+                    <h3 className="font-headline font-bold text-sm text-on-surface">
+                      Published Facilities ({facilities.length})
+                    </h3>
+                    <p className="text-[10px] text-on-surface-variant">
+                      Active spaces visible on the public Facilities page
+                    </p>
+                  </div>
+
+                  {/* Filter Pills */}
+                  <div className="flex border border-outline-variant/30 rounded-sm overflow-hidden text-xs">
+                    {[
+                      { key: 'all', label: 'All' },
+                      { key: 'sports', label: 'Sports' },
+                      { key: 'auditorium', label: 'Auditorium' },
+                      { key: 'preprimary', label: 'Pre-Primary' },
+                      { key: 'labs', label: 'Labs' },
+                      { key: 'hostel', label: 'Hostel' },
+                    ].map((pill) => (
+                      <button
+                        key={pill.key}
+                        type="button"
+                        onClick={() => setFacilityFilter(pill.key)}
+                        className={`px-3 py-1 text-xs font-bold transition-colors cursor-pointer ${
+                          facilityFilter === pill.key ? 'bg-black text-white' : 'bg-transparent hover:bg-surface-container-low text-on-surface-variant'
+                        }`}
+                      >
+                        {pill.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {facilities
+                    .filter((item) => facilityFilter === 'all' || item.category === facilityFilter)
+                    .map((item) => {
+                      const photoCount = (item.images && item.images.length > 0) ? item.images.length : 1;
+                      return (
+                        <div
+                          key={item.id}
+                          className="bg-surface-container-low/50 rounded-sm border border-outline-variant/30 overflow-hidden flex flex-col justify-between group hover:border-black/30 transition-all"
+                        >
+                          <div>
+                            <div className="h-36 bg-black relative overflow-hidden">
+                              <img
+                                src={item.image}
+                                alt={item.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <span className="absolute top-2 left-2 bg-black/70 text-white font-label text-[9px] uppercase font-bold px-2 py-0.5 rounded-sm">
+                                {item.tag}
+                              </span>
+                              {photoCount > 1 && (
+                                <span className="absolute top-2 right-2 bg-black text-white font-label text-[9px] uppercase font-bold px-2 py-0.5 rounded-sm flex items-center gap-1 shadow">
+                                  <span className="material-symbols-outlined text-[11px]">photo_library</span>
+                                  <span>{photoCount} Photos</span>
+                                </span>
+                              )}
+                            </div>
+                            <div className="p-3 space-y-1">
+                              <h4 className="font-headline font-bold text-xs text-on-surface line-clamp-1">
+                                {item.title}
+                              </h4>
+                              <p className="text-[11px] text-on-surface-variant line-clamp-2">
+                                {item.description}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="p-3 pt-2 border-t border-outline-variant/20 flex items-center justify-between text-[10px]">
+                            <span className="text-on-surface-variant font-medium">{item.category}</span>
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEditingFacility({ ...item, images: item.images || [item.image] });
+                                  setEditFacilityUrlInput('');
+                                }}
+                                className="px-2 py-1 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-bold rounded-sm transition-colors cursor-pointer flex items-center gap-1"
+                              >
+                                <span className="material-symbols-outlined text-[13px]">edit</span>
+                                <span>Edit</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (confirm(`Delete "${item.title}" from facilities?`)) {
+                                    deleteFacilityItem(item.id);
+                                  }
+                                }}
+                                className="px-2 py-1 bg-red-50 hover:bg-red-100 text-red-700 font-bold rounded-sm transition-colors cursor-pointer flex items-center gap-1"
+                              >
+                                <span className="material-symbols-outlined text-[13px]">delete</span>
+                                <span>Delete</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
           {/* TAB 2: GALLERY MANAGER */}
           {/* ========================================================================= */}
           {activeTab === 'gallery' && (
@@ -1078,18 +1556,31 @@ export default function AdminDashboard() {
 
                         <div className="p-3 pt-2 border-t border-outline-variant/20 flex items-center justify-between text-[10px]">
                           <span className="text-on-surface-variant">{item.date}</span>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (confirm(`Delete "${item.title}" from gallery?`)) {
-                                deleteGalleryItem(item.id);
-                              }
-                            }}
-                            className="px-2 py-1 bg-red-50 hover:bg-red-100 text-red-700 font-bold rounded-sm transition-colors cursor-pointer flex items-center gap-1"
-                          >
-                            <span className="material-symbols-outlined text-[13px]">delete</span>
-                            <span>Delete</span>
-                          </button>
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingGallery({ ...item, images: item.images || [item.image] });
+                                setEditGalleryUrlInput('');
+                              }}
+                              className="px-2 py-1 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-bold rounded-sm transition-colors cursor-pointer flex items-center gap-1"
+                            >
+                              <span className="material-symbols-outlined text-[13px]">edit</span>
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (confirm(`Delete "${item.title}" from gallery?`)) {
+                                  deleteGalleryItem(item.id);
+                                }
+                              }}
+                              className="px-2 py-1 bg-red-50 hover:bg-red-100 text-red-700 font-bold rounded-sm transition-colors cursor-pointer flex items-center gap-1"
+                            >
+                              <span className="material-symbols-outlined text-[13px]">delete</span>
+                              <span>Delete</span>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     );
@@ -1302,18 +1793,28 @@ export default function AdminDashboard() {
                         </div>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (confirm(`Delete news article "${item.title}"?`)) {
-                            deleteNewsArticle(item.id);
-                          }
-                        }}
-                        className="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold rounded-sm transition-colors cursor-pointer shrink-0 flex items-center gap-1"
-                      >
-                        <span className="material-symbols-outlined text-[14px]">delete</span>
-                        <span>Delete</span>
-                      </button>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => setEditingNews(item)}
+                          className="px-2.5 py-1 bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-xs font-bold rounded-sm transition-colors cursor-pointer flex items-center gap-1"
+                        >
+                          <span className="material-symbols-outlined text-[14px]">edit</span>
+                          <span>Edit</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (confirm(`Delete news article "${item.title}"?`)) {
+                              deleteNewsArticle(item.id);
+                            }
+                          }}
+                          className="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold rounded-sm transition-colors cursor-pointer flex items-center gap-1"
+                        >
+                          <span className="material-symbols-outlined text-[14px]">delete</span>
+                          <span>Delete</span>
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -1855,6 +2356,674 @@ export default function AdminDashboard() {
           )}
         </main>
       </div>
+
+      {/* ========================================================================= */}
+      {/* EDIT FACILITY MODAL */}
+      {/* ========================================================================= */}
+      {editingFacility && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+          onClick={() => setEditingFacility(null)}
+        >
+          <div
+            className="bg-white max-w-2xl w-full rounded-sm border border-outline-variant/30 shadow-xl flex flex-col max-h-[92vh] animate-fadeIn"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 sm:p-5 border-b border-outline-variant/20 flex items-center justify-between bg-surface-container-low/40">
+              <div>
+                <h3 className="font-headline font-bold text-base text-on-surface">
+                  Edit Facility Details
+                </h3>
+                <p className="text-xs text-on-surface-variant">
+                  Update facility name, category, multi-photos, and description.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingFacility(null)}
+                className="text-on-surface-variant hover:text-black p-1 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!editingFacility.title.trim()) {
+                  alert('Facility title is required.');
+                  return;
+                }
+                const imgs = editingFacility.images && editingFacility.images.length > 0
+                  ? editingFacility.images
+                  : [editingFacility.image];
+
+                updateFacilityItem(editingFacility.id, {
+                  title: editingFacility.title,
+                  category: editingFacility.category,
+                  tag: editingFacility.tag,
+                  description: editingFacility.description,
+                  image: imgs[0],
+                  images: imgs,
+                  date: editingFacility.date,
+                });
+                setEditingFacility(null);
+              }}
+              className="p-5 overflow-y-auto space-y-4 text-xs"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                    Category
+                  </label>
+                  <select
+                    value={editingFacility.category}
+                    onChange={(e) => setEditingFacility({ ...editingFacility, category: e.target.value })}
+                    className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs font-medium text-on-surface focus:ring-1 focus:ring-black"
+                  >
+                    <option value="sports">Athletics &amp; Sports Grounds</option>
+                    <option value="auditorium">Auditorium &amp; Conference Hall</option>
+                    <option value="preprimary">Pre-Primary &amp; Kids Entertainment</option>
+                    <option value="labs">Computer &amp; Robotics Labs</option>
+                    <option value="hostel">Hostel &amp; Dining Hall</option>
+                    <option value="academics">Classrooms &amp; Library</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                    Tag Badge
+                  </label>
+                  <input
+                    type="text"
+                    value={editingFacility.tag}
+                    onChange={(e) => setEditingFacility({ ...editingFacility, tag: e.target.value })}
+                    className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                  Facility Title
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editingFacility.title}
+                  onChange={(e) => setEditingFacility({ ...editingFacility, title: e.target.value })}
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black font-semibold"
+                />
+              </div>
+
+              {/* Photos in editing */}
+              <div className="p-3 bg-surface-container-low/40 rounded-sm border border-outline-variant/20 space-y-3">
+                <label className="block text-[11px] font-bold text-on-surface uppercase tracking-wider">
+                  Manage Photos ({(editingFacility.images || []).length})
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={editFacilityUrlInput}
+                    onChange={(e) => setEditFacilityUrlInput(e.target.value)}
+                    placeholder="Paste new photo URL and click Add"
+                    className="flex-1 px-3 py-1.5 bg-white border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (editFacilityUrlInput.trim()) {
+                        const newImgs = [...(editingFacility.images || [editingFacility.image]), editFacilityUrlInput.trim()];
+                        setEditingFacility({
+                          ...editingFacility,
+                          images: newImgs,
+                          image: newImgs[0],
+                        });
+                        setEditFacilityUrlInput('');
+                      }
+                    }}
+                    className="px-3 py-1.5 bg-black text-white rounded-sm font-bold text-xs cursor-pointer"
+                  >
+                    Add Photo
+                  </button>
+                  <label className="px-3 py-1.5 bg-surface-container-high text-on-surface rounded-sm font-bold text-xs cursor-pointer border border-outline-variant/30">
+                    Upload
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const files = e.target.files;
+                        if (files && files.length > 0) {
+                          Array.from(files).forEach((file) => {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              if (typeof reader.result === 'string') {
+                                const res = reader.result;
+                                setEditingFacility((prev) => {
+                                  if (!prev) return prev;
+                                  const updated = [...(prev.images || [prev.image]), res];
+                                  return { ...prev, images: updated, image: updated[0] };
+                                });
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          });
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+
+                <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 pt-1">
+                  {(editingFacility.images || [editingFacility.image]).map((img, idx) => (
+                    <div key={idx} className="relative group rounded-sm overflow-hidden border border-outline-variant/40 bg-black h-16">
+                      <img src={img} alt="preview" className="w-full h-full object-cover" />
+                      {idx === 0 && (
+                        <span className="absolute top-0.5 left-0.5 bg-black text-white text-[7px] uppercase font-bold px-1 rounded">
+                          Cover
+                        </span>
+                      )}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                        {idx !== 0 && (
+                          <button
+                            type="button"
+                            title="Set as Cover"
+                            onClick={() => {
+                              const current = editingFacility.images || [editingFacility.image];
+                              const sel = current[idx];
+                              const rest = current.filter((_, i) => i !== idx);
+                              const reord = [sel, ...rest];
+                              setEditingFacility({ ...editingFacility, images: reord, image: sel });
+                            }}
+                            className="p-1 bg-white text-black rounded text-[9px]"
+                          >
+                            <span className="material-symbols-outlined text-[12px]">star</span>
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          title="Remove Photo"
+                          onClick={() => {
+                            const current = editingFacility.images || [editingFacility.image];
+                            const filtered = current.filter((_, i) => i !== idx);
+                            setEditingFacility({
+                              ...editingFacility,
+                              images: filtered,
+                              image: filtered.length > 0 ? filtered[0] : '',
+                            });
+                          }}
+                          className="p-1 bg-red-600 text-white rounded text-[9px]"
+                        >
+                          <span className="material-symbols-outlined text-[12px]">delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                  Description
+                </label>
+                <textarea
+                  rows={3}
+                  value={editingFacility.description}
+                  onChange={(e) => setEditingFacility({ ...editingFacility, description: e.target.value })}
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black leading-relaxed"
+                />
+              </div>
+
+              <div className="pt-3 border-t border-outline-variant/20 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingFacility(null)}
+                  className="px-4 py-2 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-bold rounded-sm text-xs cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-black hover:bg-neutral-800 text-white font-bold rounded-sm text-xs cursor-pointer shadow-sm"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* EDIT GALLERY EVENT MODAL */}
+      {/* ========================================================================= */}
+      {editingGallery && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+          onClick={() => setEditingGallery(null)}
+        >
+          <div
+            className="bg-white max-w-2xl w-full rounded-sm border border-outline-variant/30 shadow-xl flex flex-col max-h-[92vh] animate-fadeIn"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 sm:p-5 border-b border-outline-variant/20 flex items-center justify-between bg-surface-container-low/40">
+              <div>
+                <h3 className="font-headline font-bold text-base text-on-surface">
+                  Edit Gallery Event
+                </h3>
+                <p className="text-xs text-on-surface-variant">
+                  Update event title, category, media photos, and description.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingGallery(null)}
+                className="text-on-surface-variant hover:text-black p-1 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!editingGallery.title.trim()) {
+                  alert('Gallery title is required.');
+                  return;
+                }
+                const imgs = editingGallery.images && editingGallery.images.length > 0
+                  ? editingGallery.images
+                  : [editingGallery.image];
+
+                updateGalleryItem(editingGallery.id, {
+                  title: editingGallery.title,
+                  category: editingGallery.category,
+                  tag: editingGallery.tag,
+                  description: editingGallery.description,
+                  image: imgs[0],
+                  images: imgs,
+                  date: editingGallery.date,
+                  mediaType: editingGallery.mediaType,
+                  videoUrl: editingGallery.videoUrl,
+                });
+                setEditingGallery(null);
+              }}
+              className="p-5 overflow-y-auto space-y-4 text-xs"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                    Category
+                  </label>
+                  <select
+                    value={editingGallery.category}
+                    onChange={(e) => setEditingGallery({ ...editingGallery, category: e.target.value })}
+                    className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs font-medium text-on-surface focus:ring-1 focus:ring-black"
+                  >
+                    <option value="sports">Sports &amp; Athletics</option>
+                    <option value="stem">STEM &amp; Robotics</option>
+                    <option value="arts">Oratory &amp; Arts</option>
+                    <option value="community">Campus &amp; Houses</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                    Tag Badge
+                  </label>
+                  <input
+                    type="text"
+                    value={editingGallery.tag}
+                    onChange={(e) => setEditingGallery({ ...editingGallery, tag: e.target.value })}
+                    className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                  Event Title
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editingGallery.title}
+                  onChange={(e) => setEditingGallery({ ...editingGallery, title: e.target.value })}
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black font-semibold"
+                />
+              </div>
+
+              {/* Photos in editing */}
+              <div className="p-3 bg-surface-container-low/40 rounded-sm border border-outline-variant/20 space-y-3">
+                <label className="block text-[11px] font-bold text-on-surface uppercase tracking-wider">
+                  Manage Photos ({(editingGallery.images || []).length})
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={editGalleryUrlInput}
+                    onChange={(e) => setEditGalleryUrlInput(e.target.value)}
+                    placeholder="Paste new photo URL and click Add"
+                    className="flex-1 px-3 py-1.5 bg-white border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (editGalleryUrlInput.trim()) {
+                        const newImgs = [...(editingGallery.images || [editingGallery.image]), editGalleryUrlInput.trim()];
+                        setEditingGallery({
+                          ...editingGallery,
+                          images: newImgs,
+                          image: newImgs[0],
+                        });
+                        setEditGalleryUrlInput('');
+                      }
+                    }}
+                    className="px-3 py-1.5 bg-black text-white rounded-sm font-bold text-xs cursor-pointer"
+                  >
+                    Add Photo
+                  </button>
+                  <label className="px-3 py-1.5 bg-surface-container-high text-on-surface rounded-sm font-bold text-xs cursor-pointer border border-outline-variant/30">
+                    Upload
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const files = e.target.files;
+                        if (files && files.length > 0) {
+                          Array.from(files).forEach((file) => {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              if (typeof reader.result === 'string') {
+                                const res = reader.result;
+                                setEditingGallery((prev) => {
+                                  if (!prev) return prev;
+                                  const updated = [...(prev.images || [prev.image]), res];
+                                  return { ...prev, images: updated, image: updated[0] };
+                                });
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          });
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+
+                <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 pt-1">
+                  {(editingGallery.images || [editingGallery.image]).map((img, idx) => (
+                    <div key={idx} className="relative group rounded-sm overflow-hidden border border-outline-variant/40 bg-black h-16">
+                      <img src={img} alt="preview" className="w-full h-full object-cover" />
+                      {idx === 0 && (
+                        <span className="absolute top-0.5 left-0.5 bg-black text-white text-[7px] uppercase font-bold px-1 rounded">
+                          Cover
+                        </span>
+                      )}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                        {idx !== 0 && (
+                          <button
+                            type="button"
+                            title="Set as Cover"
+                            onClick={() => {
+                              const current = editingGallery.images || [editingGallery.image];
+                              const sel = current[idx];
+                              const rest = current.filter((_, i) => i !== idx);
+                              const reord = [sel, ...rest];
+                              setEditingGallery({ ...editingGallery, images: reord, image: sel });
+                            }}
+                            className="p-1 bg-white text-black rounded text-[9px]"
+                          >
+                            <span className="material-symbols-outlined text-[12px]">star</span>
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          title="Remove Photo"
+                          onClick={() => {
+                            const current = editingGallery.images || [editingGallery.image];
+                            const filtered = current.filter((_, i) => i !== idx);
+                            setEditingGallery({
+                              ...editingGallery,
+                              images: filtered,
+                              image: filtered.length > 0 ? filtered[0] : '',
+                            });
+                          }}
+                          className="p-1 bg-red-600 text-white rounded text-[9px]"
+                        >
+                          <span className="material-symbols-outlined text-[12px]">delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                  Event Venue / Date
+                </label>
+                <input
+                  type="text"
+                  value={editingGallery.date}
+                  onChange={(e) => setEditingGallery({ ...editingGallery, date: e.target.value })}
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                  Description
+                </label>
+                <textarea
+                  rows={3}
+                  value={editingGallery.description}
+                  onChange={(e) => setEditingGallery({ ...editingGallery, description: e.target.value })}
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black leading-relaxed"
+                />
+              </div>
+
+              <div className="pt-3 border-t border-outline-variant/20 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingGallery(null)}
+                  className="px-4 py-2 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-bold rounded-sm text-xs cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-black hover:bg-neutral-800 text-white font-bold rounded-sm text-xs cursor-pointer shadow-sm"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* EDIT NEWS ARTICLE MODAL */}
+      {/* ========================================================================= */}
+      {editingNews && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+          onClick={() => setEditingNews(null)}
+        >
+          <div
+            className="bg-white max-w-2xl w-full rounded-sm border border-outline-variant/30 shadow-xl flex flex-col max-h-[92vh] animate-fadeIn"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 sm:p-5 border-b border-outline-variant/20 flex items-center justify-between bg-surface-container-low/40">
+              <div>
+                <h3 className="font-headline font-bold text-base text-on-surface">
+                  Edit News Article / Notice
+                </h3>
+                <p className="text-xs text-on-surface-variant">
+                  Update title, summary, tag, and publish badge.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingNews(null)}
+                className="text-on-surface-variant hover:text-black p-1 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!editingNews.title.trim() || !editingNews.summary.trim()) {
+                  alert('Title and Summary are required.');
+                  return;
+                }
+
+                updateNewsArticle(editingNews.id, {
+                  title: editingNews.title,
+                  category: editingNews.category,
+                  tag: editingNews.tag,
+                  summary: editingNews.summary,
+                  image: editingNews.image,
+                  badge: editingNews.badge,
+                  date: editingNews.date,
+                });
+                setEditingNews(null);
+              }}
+              className="p-5 overflow-y-auto space-y-4 text-xs"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                    Category
+                  </label>
+                  <select
+                    value={editingNews.category}
+                    onChange={(e) => setEditingNews({ ...editingNews, category: e.target.value })}
+                    className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs font-medium text-on-surface focus:ring-1 focus:ring-black"
+                  >
+                    <option value="notices">Official Notices</option>
+                    <option value="academic">Academic &amp; SEE</option>
+                    <option value="sports">Sports &amp; Athletics</option>
+                    <option value="stem">STEM &amp; Robotics</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                    Badge
+                  </label>
+                  <input
+                    type="text"
+                    value={editingNews.badge}
+                    onChange={(e) => setEditingNews({ ...editingNews, badge: e.target.value })}
+                    className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                    Tag
+                  </label>
+                  <input
+                    type="text"
+                    value={editingNews.tag}
+                    onChange={(e) => setEditingNews({ ...editingNews, tag: e.target.value })}
+                    className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                  Article Title
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editingNews.title}
+                  onChange={(e) => setEditingNews({ ...editingNews, title: e.target.value })}
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black font-semibold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                  Cover Image URL
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={editingNews.image}
+                    onChange={(e) => setEditingNews({ ...editingNews, image: e.target.value })}
+                    className="flex-1 px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black"
+                  />
+                  <label className="px-3 py-2 bg-surface-container-high text-on-surface rounded-sm font-bold text-xs cursor-pointer border border-outline-variant/30">
+                    Upload
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            if (typeof reader.result === 'string') {
+                              setEditingNews((prev) => prev ? { ...prev, image: reader.result as string } : prev);
+                            }
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">
+                  Summary &amp; Content
+                </label>
+                <textarea
+                  rows={4}
+                  value={editingNews.summary}
+                  onChange={(e) => setEditingNews({ ...editingNews, summary: e.target.value })}
+                  className="w-full px-3 py-2 bg-surface-container-low border border-outline-variant/30 rounded-sm text-xs text-on-surface focus:ring-1 focus:ring-black leading-relaxed"
+                />
+              </div>
+
+              <div className="pt-3 border-t border-outline-variant/20 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingNews(null)}
+                  className="px-4 py-2 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-bold rounded-sm text-xs cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-black hover:bg-neutral-800 text-white font-bold rounded-sm text-xs cursor-pointer shadow-sm"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

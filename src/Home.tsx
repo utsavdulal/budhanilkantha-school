@@ -1,4 +1,4 @@
-
+import Footer from './components/Footer';
 
 export default function Home() {
   return (
@@ -61,7 +61,7 @@ export default function Home() {
 </div>
 </div>
 </header>
-<main className="w-full pt-28 bg-surface">
+<main className="w-full pt-18 sm:pt-20 bg-surface">
 <div className="flex flex-col w-full">
 {/*  3. HERO SECTION  */}
 <section className="relative w-full overflow-hidden bg-primary-container min-h-[85vh] flex items-center">
@@ -697,106 +697,8 @@ export default function Home() {
 </div>
 </section>
 </div>
-</main>
-{/*  12. DETAILED INSTITUTIONAL FOOTER  */}
-<footer className="w-full bg-surface-container-low border-t border-outline-variant/30 text-on-surface">
-<div className="max-w-container-max mx-auto px-gutter-desktop py-space-4xl">
-<div className="grid grid-cols-1 md:grid-cols-12 gap-space-2xl">
-<div className="md:col-span-4 space-y-space-md">
-<div className="flex items-center gap-3">
-<div className="w-11 h-11 rounded-full bg-primary-container text-tertiary-fixed flex items-center justify-center font-headline-md text-[22px] font-bold border-2 border-tertiary-fixed/30">
-              B
-            </div>
-<div className="flex flex-col">
-<span className="font-headline-sm text-headline-sm text-primary leading-tight font-bold">
-                Budhanilkantha Secondary English School
-              </span>
-<span className="font-caption text-caption text-secondary">
-                बुढानिलकण्ठ विद्यालय • Estd. 2040 B.S. (1983 A.D.)
-              </span>
-</div>
-</div>
-<p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-            A leading English-medium institution in Biratnagar dedicated to academic rigor, character building, science and robotics innovation, and championship sports excellence for over four decades.
-          </p>
-<div className="pt-space-xs space-y-2 text-caption font-caption text-on-surface-variant">
-<div className="flex items-center gap-2">
-<span className="material-symbols-outlined text-[17px] text-on-tertiary-container">location_on</span>
-<span>Shankarpur, Biratnagar-2, Morang, Koshi Province 56613, Nepal</span>
-</div>
-<div className="flex items-center gap-2">
-<span className="material-symbols-outlined text-[17px] text-on-tertiary-container">call</span>
-<a className="hover:underline font-semibold text-primary" href="tel:021514168">Direct Telephone: 021-514168</a>
-</div>
-<div className="flex items-center gap-2">
-<span className="material-symbols-outlined text-[17px] text-on-tertiary-container">pin_drop</span>
-<span>Google Plus Code: F7CM+43 Biratnagar</span>
-</div>
-</div>
-</div>
-<div className="md:col-span-2">
-<h3 className="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-md font-bold">
-            Academic Wings
-          </h3>
-<ul className="space-y-space-sm font-body-sm text-body-sm text-on-surface-variant">
-<li><a className="hover:text-on-surface transition-colors" href="#academic-wings">Pre-Primary (PG–UKG)</a></li>
-<li><a className="hover:text-on-surface transition-colors" href="#academic-wings">Primary School (1–5)</a></li>
-<li><a className="hover:text-on-surface transition-colors" href="#academic-wings">Lower Secondary (6–8)</a></li>
-<li><a className="hover:text-on-surface transition-colors" href="#academic-wings">Secondary Wing (9 &amp; 10)</a></li>
-<li><a className="hover:text-on-surface transition-colors" href="#academic-wings">SEE Board Distinction</a></li>
-<li><a className="hover:text-on-surface transition-colors" href="#features">Super Learning &amp; Remedials</a></li>
-</ul>
-</div>
-<div className="md:col-span-2">
-<h3 className="font-label-caps text-label-caps text-primary tracking-widest uppercase mb-space-md font-bold">
-            Campus Highlights
-          </h3>
-<ul className="space-y-space-sm font-body-sm text-body-sm text-on-surface-variant">
-<li><a className="hover:text-on-surface transition-colors" href="#features">NASA USA &amp; Japan Camps</a></li>
-<li><a className="hover:text-on-surface transition-colors" href="#features">Cricket (ICC Panel Coach)</a></li>
-<li><a className="hover:text-on-surface transition-colors" href="#facilities">Robotics &amp; Science Labs</a></li>
-<li><a className="hover:text-on-surface transition-colors" href="#facilities">250-Seat Conference Hall</a></li>
-<li><a className="hover:text-on-surface transition-colors" href="#facilities">Kids' Entertainment Hall</a></li>
-<li><a className="hover:text-on-surface transition-colors" href="#facilities">Hostel &amp; Purified Water</a></li>
-</ul>
-</div>
-<div className="md:col-span-4 space-y-space-md">
-<h3 className="font-label-caps text-label-caps text-primary tracking-widest uppercase font-bold">
-            Admissions &amp; Notices
-          </h3>
-<p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-            Receive official admissions announcements, examination routines, and school notices directly to your email.
-          </p>
-<div className="flex items-center gap-2">
-<input className="w-full h-11 px-space-md bg-surface border border-outline-variant rounded font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary" placeholder="Enter your mobile or email" type="text" />
-<button className="h-11 px-space-md bg-primary-container hover:bg-primary text-on-primary font-label-caps text-[11px] uppercase tracking-wider rounded shrink-0 transition-colors font-bold" type="button">
-              Subscribe
-            </button>
-</div>
-<div className="pt-space-xs">
-<span className="font-label-caps text-[10px] uppercase text-secondary tracking-widest block mb-space-xs font-semibold">
-              Official Affiliations &amp; Accreditations
-            </span>
-<div className="flex items-center gap-2 text-caption text-secondary flex-wrap">
-<span className="border border-outline-variant/60 px-2 py-1 rounded bg-surface">Ministry of Education, Nepal</span>
-<span className="border border-outline-variant/60 px-2 py-1 rounded bg-surface">SEE Board Nepal</span>
-<span className="border border-outline-variant/60 px-2 py-1 rounded bg-surface">Biratnagar-2 Ward</span>
-</div>
-</div>
-</div>
-</div>
-<div className="mt-space-3xl pt-space-md border-t border-outline-variant/30 flex flex-col sm:flex-row items-center justify-between text-caption text-on-surface-variant gap-space-sm">
-<p>© 2026 Budhanilkantha Secondary English School (बुढानिलकण्ठ विद्यालय). All rights reserved. Shankarpur, Biratnagar-2, Morang, Nepal.</p>
-<div className="flex items-center space-x-space-md">
-<a className="hover:text-primary transition-colors" href="#">Academic Calendar</a>
-<a className="hover:text-primary transition-colors" href="#">Student Conduct Code</a>
-<a className="hover:text-primary transition-colors" href="#">Hostel Guidelines</a>
-<a className="hover:text-primary transition-colors" href="tel:021514168">Contact Desk</a>
-</div>
-</div>
-</div>
-</footer>
-
+      </main>
+      <Footer />
     </div>
   );
 }

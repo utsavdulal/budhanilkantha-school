@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import { useData } from '../context/DataContext';
 
 export default function StJudeAdmissions() {
@@ -53,7 +53,7 @@ export default function StJudeAdmissions() {
       <Navbar />
 
       {/* MAIN CONTENT */}
-      <main className="w-full pt-28 bg-surface">
+      <main className="w-full pt-18 sm:pt-20 bg-surface">
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 py-space-2xl md:py-space-3xl space-y-space-3xl">
           
           {/* HEADER SECTION */}
@@ -352,26 +352,8 @@ export default function StJudeAdmissions() {
         </div>
       </main>
 
-      {/* MINIMAL FOOTER */}
-      <footer className="w-full bg-surface-container-low border-t border-outline-variant/30 text-on-surface py-space-xl">
-        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 flex flex-col sm:flex-row items-center justify-between text-caption text-on-surface-variant gap-space-sm">
-          <p>© 2026 Budhanilkantha Secondary English School. Shankarpur, Biratnagar-2, Morang, Nepal.</p>
-          <div className="flex items-center space-x-space-md font-medium">
-            <Link className="hover:text-primary transition-colors" to="/">
-              Home
-            </Link>
-            <Link className="hover:text-primary transition-colors" to="/about">
-              About
-            </Link>
-            <Link className="hover:text-primary transition-colors" to="/academics">
-              Academics
-            </Link>
-            <a className="hover:text-primary transition-colors" href="tel:021514168">
-              Call: 021-514168
-            </a>
-          </div>
-        </div>
-      </footer>
+      {/* FOOTER */}
+      <Footer />
     </div>
   );
 }
