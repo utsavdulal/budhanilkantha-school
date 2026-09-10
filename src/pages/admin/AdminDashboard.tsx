@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useData, type AdmissionInquiry, type ContactMessage, type FacilityItem, type GalleryItem, type NewsArticle } from '../../context/DataContext';
+import { isSessionActive, endAdminSession } from '../../utils/auth';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -44,16 +45,15 @@ export default function AdminDashboard() {
 
   const [editingNews, setEditingNews] = useState<NewsArticle | null>(null);
 
-  // Authentication check
+  // Cryptographic session validation check
   useEffect(() => {
-    const auth = localStorage.getItem('bks_admin_auth');
-    if (!auth) {
+    if (!isSessionActive()) {
       navigate('/admin/login');
     }
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('bks_admin_auth');
+    endAdminSession();
     navigate('/admin/login');
   };
 

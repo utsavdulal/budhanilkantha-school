@@ -1,19 +1,30 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { verifyAdminCredentials } from '../../utils/auth';
 
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (username.trim() === 'admin' && (password === 'admin2040' || password === 'admin123' || password === 'admin')) {
-      localStorage.setItem('bks_admin_auth', 'true');
-      navigate('/admin');
-    } else {
-      setError('Invalid credentials.');
+    setLoading(true);
+    setError('');
+
+    try {
+      const result = await verifyAdminCredentials(username, password);
+      if (result.success) {
+        navigate('/admin');
+      } else {
+        setError(result.error || 'Invalid credentials.');
+      }
+    } catch {
+      setError('An authentication error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,22 +95,33 @@ export default function AdminLogin() {
           <div className="pt-2">
             <button
               type="submit"
-              className="w-full py-2.5 bg-black hover:bg-neutral-800 text-white rounded-sm font-label text-xs uppercase tracking-widest font-bold transition-all shadow-sm cursor-pointer"
+              disabled={loading}
+              className="w-full py-3 bg-primary hover:bg-primary-container text-on-primary rounded-lg font-label-caps text-xs uppercase tracking-widest font-bold transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
             >
-              Sign In to Console
+              {loading ? (
+                <>
+                  <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
+                  <span>Verifying Credentials...</span>
+                </>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined text-[18px]">lock_open</span>
+                  <span>Sign In to Console</span>
+                </>
+              )}
             </button>
           </div>
         </form>
 
-        <div className="pt-4 border-t border-outline-variant/20 flex items-center justify-between text-xs text-on-surface-variant">
+        <div className="pt-4 border-t border-outline-variant/30 flex items-center justify-between text-xs text-on-surface-variant">
           <Link
             to="/"
-            className="hover:text-black font-medium inline-flex items-center gap-1 transition-colors"
+            className="hover:text-primary font-medium inline-flex items-center gap-1 transition-colors"
           >
             <span className="material-symbols-outlined text-[15px]">arrow_back</span>
             <span>Return to public portal</span>
           </Link>
-          <span className="text-[10px] text-outline">Estd. 2040 B.S.</span>
+          <span className="text-[10px] text-on-surface-variant/60 font-semibold">🔒 256-Bit Encrypted</span>
         </div>
       </div>
     </div>
