@@ -62,8 +62,8 @@ export default function StJudeAdmissions() {
             style={{ backgroundImage: `url('/images/enrollment-students.jpg')` }}
           />
           
-          {/* Cinematic Dark Gradient Overlay (Royal Forest Green) */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#031c12]/95 via-[#072b1d]/90 to-[#0e3d2a]/80" />
+          {/* Cinematic Dark Gradient Overlay (Royal Bronze & Gold) */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#120c04]/95 via-[#1c1409]/90 to-[#2b1d0a]/80" />
           <div className="absolute inset-0 bg-black/20 pointer-events-none" />
 
           <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 relative z-10">
