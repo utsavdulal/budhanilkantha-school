@@ -29,9 +29,11 @@ export default function BudhanilkanthaHome() {
 <div className="h-20 bg-surface/98 backdrop-blur-md border-b border-outline-variant/40 shadow-[0_1px_10px_rgba(15,30,54,0.06)]">
 <div className="max-w-container-max mx-auto h-full px-gutter-desktop flex items-center justify-between gap-space-lg">
 <div className="flex items-center gap-3 shrink-0">
-<div className="w-11 h-11 rounded-full bg-primary-container text-tertiary-fixed flex items-center justify-center font-headline-md text-[22px] font-bold border-2 border-tertiary-fixed/40 shadow-sm">
-            B
-          </div>
+<img
+            src="/images/school-logo.png"
+            alt="Budhanilkantha Secondary English School Logo"
+            className="w-11 h-11 rounded-full object-contain bg-white border-2 border-tertiary-fixed/40 shadow-sm p-0.5"
+          />
 <div className="flex flex-col">
 <span className="font-headline-sm text-[1.15rem] sm:text-headline-sm text-primary tracking-tight font-bold leading-none">
               Budhanilkantha Secondary English School

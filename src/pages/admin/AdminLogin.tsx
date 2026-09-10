@@ -34,9 +34,11 @@ export default function AdminLogin() {
         {/* Brand Header */}
         <div className="space-y-1">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-black text-white font-headline font-extrabold text-lg flex items-center justify-center rounded-sm">
-              B
-            </div>
+            <img
+              src="/images/school-logo.png"
+              alt="Budhanilkantha School Logo"
+              className="w-11 h-11 rounded-full object-contain bg-white border border-outline-variant/30 p-0.5 shadow-sm"
+            />
             <div>
               <h1 className="font-headline font-extrabold text-lg text-primary tracking-tight">
                 Budhanilkantha

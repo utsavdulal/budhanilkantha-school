@@ -405,9 +405,11 @@ export default function AdminDashboard() {
           {/* Logo & School Header */}
           <div className="p-6 border-b border-outline-variant/20 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-black text-white font-headline font-extrabold text-base flex items-center justify-center rounded-sm">
-                B
-              </div>
+              <img
+                src="/images/school-logo.png"
+                alt="Budhanilkantha School Logo"
+                className="w-9 h-9 rounded-full object-contain bg-white border border-outline-variant/30 p-0.5 shadow-sm"
+              />
               <div className="flex flex-col">
                 <h1 className="font-headline font-extrabold text-sm tracking-tight text-primary leading-tight">
                   Budhanilkantha

@@ -83,25 +83,40 @@ export default function ContactUs() {
                 </div>
               </div>
 
-              {/* Card 2: Call Us */}
+              {/* Card 2: Call / WhatsApp Us */}
               <div className="p-space-xl rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
                 <div className="space-y-space-sm">
                   <div className="w-12 h-12 rounded-xl bg-primary-container text-tertiary-fixed flex items-center justify-center shadow-sm">
                     <span className="material-symbols-outlined text-[26px]">call</span>
                   </div>
-                  <h3 className="font-headline-sm text-lg font-bold text-primary font-serif">Call Us</h3>
-                  <div className="space-y-0.5 font-body-sm text-on-surface-variant">
+                  <h3 className="font-headline-sm text-lg font-bold text-primary font-serif">Call & WhatsApp</h3>
+                  <div className="space-y-1 font-body-sm text-on-surface-variant">
                     <p className="font-bold text-primary text-base">021-514168</p>
+                    <p className="font-semibold text-primary text-sm flex items-center gap-1 text-[#25D366]">
+                      <span>WhatsApp:</span>
+                      <a href="https://wa.me/9779827028947" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                        +977 982-7028947
+                      </a>
+                    </p>
                     <p className="text-xs text-secondary">Tel / Admissions Desk</p>
                   </div>
                 </div>
-                <div className="pt-space-md border-t border-outline-variant/20 mt-space-md">
+                <div className="pt-space-md border-t border-outline-variant/20 mt-space-md flex items-center justify-between gap-2">
                   <a
                     href="tel:021514168"
                     className="inline-flex items-center gap-1 text-primary font-label-caps text-[11px] uppercase tracking-wider font-bold hover:underline"
                   >
-                    <span>Click to Call</span>
+                    <span>Call</span>
                     <span className="material-symbols-outlined text-[14px]">phone_forwarded</span>
+                  </a>
+                  <a
+                    href="https://wa.me/9779827028947"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[#25D366] font-label-caps text-[11px] uppercase tracking-wider font-bold hover:underline"
+                  >
+                    <span>WhatsApp</span>
+                    <span className="material-symbols-outlined text-[14px]">chat</span>
                   </a>
                 </div>
               </div>

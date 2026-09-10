@@ -63,9 +63,11 @@ export default function Navbar() {
         <div className="w-full h-full px-3 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 flex items-center justify-between gap-2 sm:gap-space-lg">
           {/* School Brand & Logo */}
           <Link to="/" className="flex items-center gap-2 sm:gap-space-md shrink-0 min-w-0" onClick={closeMobile}>
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded bg-primary-container text-tertiary-fixed flex items-center justify-center font-headline-md text-base sm:text-[20px] font-bold border border-tertiary-fixed/30 shadow-sm shrink-0">
-              B
-            </div>
+            <img
+              src="/images/school-logo.png"
+              alt="Budhanilkantha Secondary English School Logo"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-contain shadow-sm shrink-0 bg-white border border-outline-variant/40 p-0.5"
+            />
             <div className="flex flex-col min-w-0">
               <span className="font-headline-sm text-sm sm:text-base md:text-headline-sm text-primary tracking-tight leading-tight font-bold truncate">
                 Budhanilkantha School
