@@ -56,17 +56,45 @@ export default function StJudeAdmissions() {
       <main className="w-full pt-18 sm:pt-20 bg-surface">
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 py-space-2xl md:py-space-3xl space-y-space-3xl">
           
-          {/* HEADER SECTION */}
-          <div className="max-w-3xl space-y-space-xs">
-            <span className="font-label-caps text-label-caps uppercase tracking-[0.2em] text-on-tertiary-container font-bold">
-              ADMISSIONS &amp; ENROLLMENT · ACADEMIC YEAR 2081/2082
-            </span>
-            <h1 className="font-headline-xl md:text-display-hero text-headline-xl text-primary font-serif font-normal leading-tight">
-              Begin Your Child's Journey of Excellence.
-            </h1>
-            <p className="font-body-lead text-body-lead text-on-surface-variant leading-relaxed pt-1">
-              Admissions are open for <strong>Playgroup through Grade 10</strong>. Fill out the inquiry form below or visit our Shankarpur campus to meet our faculty.
-            </p>
+          {/* HEADER HERO BANNER (MATCHING STUDENT LIFE STYLE) */}
+          <div className="relative rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-md overflow-hidden flex flex-col md:flex-row items-stretch">
+            
+            {/* Left Side: Typography & Framed Details */}
+            <div className="w-full md:w-[55%] lg:w-[58%] p-6 sm:p-10 lg:p-12 flex flex-col justify-center relative z-10 bg-surface-container-lowest space-y-3">
+              {/* Subtle Decorative Golden Frame in Top Left */}
+              <div className="absolute top-6 left-6 w-12 h-12 border-t-2 border-l-2 border-amber-400/50 rounded-tl-lg pointer-events-none hidden sm:block" />
+
+              <span className="font-label-caps text-[11px] sm:text-label-caps uppercase tracking-[0.2em] text-on-tertiary-container font-bold">
+                ADMISSIONS &amp; ENROLLMENT · ACADEMIC YEAR 2081/2082
+              </span>
+              <h1 className="font-headline-xl md:text-display-hero text-headline-xl text-primary font-serif font-normal leading-tight">
+                Begin Your Child's Journey of Excellence.
+              </h1>
+              <p className="font-body-lead text-body-lead text-on-surface-variant leading-relaxed pt-1">
+                Admissions are open for <strong>Playgroup through Grade 10</strong>. Fill out the inquiry form below or visit our Shankarpur campus to meet our faculty.
+              </p>
+              
+              <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-semibold text-secondary">
+                <span className="inline-flex items-center gap-1.5 bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant/30 text-primary">
+                  <span className="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+                  Playgroup – Grade 10
+                </span>
+                <span className="inline-flex items-center gap-1.5 bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant/30 text-primary">
+                  <span className="material-symbols-outlined text-[16px] text-tertiary">schedule</span>
+                  24h Admissions Support
+                </span>
+              </div>
+            </div>
+
+            {/* Right Side: Diagonally Clipped School Photo */}
+            <div className="w-full md:w-[45%] lg:w-[42%] relative min-h-[260px] md:min-h-[340px] lg:min-h-[380px] overflow-hidden bg-surface-container-lowest">
+              <div
+                className="absolute inset-0 bg-cover bg-center md:[clip-path:polygon(12%_0,100%_0,100%_100%,0%_100%)] transform duration-700 hover:scale-105"
+                style={{ backgroundImage: `url('/images/enrollment-students.jpg')` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent md:hidden" />
+            </div>
+
           </div>
 
           {/* MAIN 2-COLUMN SECTION: FORM & ESSENTIAL INFO */}
