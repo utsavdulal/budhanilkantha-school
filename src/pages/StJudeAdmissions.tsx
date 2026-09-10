@@ -54,49 +54,59 @@ export default function StJudeAdmissions() {
 
       {/* MAIN CONTENT */}
       <main className="w-full pt-18 sm:pt-20 bg-surface">
-        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 py-space-2xl md:py-space-3xl space-y-space-3xl">
+        {/* 1. ISLINGTON-STYLE FULL-WIDTH HERO BANNER */}
+        <section className="relative w-full bg-[#0a192f] text-white py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden border-b border-outline-variant/30">
+          {/* Background Photo */}
+          <div
+            className="absolute inset-0 bg-cover bg-center scale-105 transition-transform duration-1000"
+            style={{ backgroundImage: `url('/images/enrollment-students.jpg')` }}
+          />
           
-          {/* HEADER HERO BANNER (MATCHING STUDENT LIFE STYLE) */}
-          <div className="relative rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-md overflow-hidden flex flex-col md:flex-row items-stretch">
-            
-            {/* Left Side: Typography & Framed Details */}
-            <div className="w-full md:w-[55%] lg:w-[58%] p-6 sm:p-10 lg:p-12 flex flex-col justify-center relative z-10 bg-surface-container-lowest space-y-3">
-              {/* Subtle Decorative Golden Frame in Top Left */}
-              <div className="absolute top-6 left-6 w-12 h-12 border-t-2 border-l-2 border-amber-400/50 rounded-tl-lg pointer-events-none hidden sm:block" />
+          {/* Cinematic Dark Gradient Overlay (Islington appointment style) */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#071324]/95 via-[#0a1d38]/90 to-[#0e274a]/80" />
+          <div className="absolute inset-0 bg-black/20 pointer-events-none" />
 
-              <span className="font-label-caps text-[11px] sm:text-label-caps uppercase tracking-[0.2em] text-on-tertiary-container font-bold">
-                ADMISSIONS &amp; ENROLLMENT · ACADEMIC YEAR 2081/2082
-              </span>
-              <h1 className="font-headline-xl md:text-display-hero text-headline-xl text-primary font-serif font-normal leading-tight">
-                Begin Your Child's Journey of Excellence.
-              </h1>
-              <p className="font-body-lead text-body-lead text-on-surface-variant leading-relaxed pt-1">
-                Admissions are open for <strong>Playgroup through Grade 10</strong>. Fill out the inquiry form below or visit our Shankarpur campus to meet our faculty.
-              </p>
+          <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 relative z-10">
+            <div className="max-w-4xl space-y-4 sm:space-y-5">
               
-              <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-semibold text-secondary">
-                <span className="inline-flex items-center gap-1.5 bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant/30 text-primary">
-                  <span className="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
-                  Playgroup – Grade 10
-                </span>
-                <span className="inline-flex items-center gap-1.5 bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant/30 text-primary">
-                  <span className="material-symbols-outlined text-[16px] text-tertiary">schedule</span>
-                  24h Admissions Support
-                </span>
+              {/* Category Pill */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[#f5be38] text-xs uppercase tracking-[0.2em] font-bold">
+                <span className="w-2 h-2 rounded-full bg-[#f5be38] animate-pulse" />
+                <span>Admissions &amp; Enrollment · Academic Year 2081/2082</span>
               </div>
-            </div>
 
-            {/* Right Side: Diagonally Clipped School Photo */}
-            <div className="w-full md:w-[45%] lg:w-[42%] relative min-h-[280px] md:min-h-[360px] overflow-hidden bg-surface-container-low">
-              <img
-                src="/images/enrollment-students.jpg"
-                alt="Budhanilkantha School Admissions"
-                className="w-full h-full object-cover min-h-[280px] md:min-h-[360px] transform duration-700 hover:scale-105 md:[clip-path:polygon(12%_0,100%_0,100%_100%,0%_100%)]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent md:hidden pointer-events-none" />
-            </div>
+              {/* Main Large Heading with Highlight Span */}
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-serif font-bold text-white tracking-tight leading-[1.15]">
+                Take the next step towards <span className="text-[#f5be38]">your child's future.</span>
+              </h1>
 
+              {/* Subtitle / Lead Paragraph */}
+              <p className="text-base sm:text-lg md:text-xl text-slate-200/90 max-w-2xl font-normal leading-relaxed">
+                Our admission counsellors are here to guide you through every step of enrollment for <strong>Playgroup through Grade 10</strong>. Submit your inquiry below and our team will get back to you shortly.
+              </p>
+
+              {/* Quick Contact & Info Chips */}
+              <div className="pt-2 flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-slate-300 font-medium">
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 px-3.5 py-2 rounded-lg">
+                  <span className="material-symbols-outlined text-[18px] text-[#f5be38]">school</span>
+                  <span>Playgroup to Grade 10</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 px-3.5 py-2 rounded-lg">
+                  <span className="material-symbols-outlined text-[18px] text-[#f5be38]">location_on</span>
+                  <span>Shankarpur, Biratnagar-2</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 px-3.5 py-2 rounded-lg">
+                  <span className="material-symbols-outlined text-[18px] text-[#f5be38]">call</span>
+                  <span>Tel: 021-514168</span>
+                </div>
+              </div>
+
+            </div>
           </div>
+        </section>
+
+        {/* 2. FORM & ADMISSIONS CONTENT CONTAINER */}
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 py-space-2xl md:py-space-3xl space-y-space-3xl">
 
           {/* MAIN 2-COLUMN SECTION: FORM & ESSENTIAL INFO */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-2xl items-start">
