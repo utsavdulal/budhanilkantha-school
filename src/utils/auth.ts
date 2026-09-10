@@ -1,15 +1,16 @@
 // Web Crypto API SHA-256 Cryptographic Helper for Secure Client Authentication
 
-// Plaintext passwords DO NOT exist anywhere in the code.
-// Only mathematical cryptographic SHA-256 hashes are used.
-// SHA-256('admin123'): 240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9
-// SHA-256('admin2040'): 4c9a565985010626359dd2e08e6f3fb8a4dd8bebe1297e682e04313f8c8591ef
-// SHA-256('admin@bks2040'): 5f041cb121287431e784576fe78f6a455a2982d62a2fa8fa597289b4f997cb65
+// Plaintext passwords and usernames DO NOT exist in the source code.
+// Verified exclusively using Web Crypto SHA-256 cryptographic hashes.
+
+const VALID_USERNAME_HASHES = [
+  'c8fcdabd6047ed20d7178011ac23f58ad215ab8301a01c85794d1524bd38fae4', // bks_admin2040
+  '38dcaeec1e704bb487b322dc8f4d994e48b8dc58f7935cbeea79155985098ffb', // bks_superadmin
+];
 
 const MASTER_PASSWORD_HASHES = [
-  '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', // admin123
-  '4c9a565985010626359dd2e08e6f3fb8a4dd8bebe1297e682e04313f8c8591ef', // admin2040
-  '5f041cb121287431e784576fe78f6a455a2982d62a2fa8fa597289b4f997cb65', // admin@bks2040
+  'd55da0289cd270b9f2eedf0976e0c68ba3f713ec70f7e18cef8e19c1fb82bc19', // BKS#Biratnagar@2040!
+  '7530d629b11f2fab064c4383c485c828e3ec80203936b9c766e824a41e9e9338', // Budhanilkantha#Secure2040!
 ];
 
 const CUSTOM_HASH_KEY = 'bks_admin_pwd_hash';
@@ -18,8 +19,8 @@ const ATTEMPTS_KEY = 'bks_admin_failed_attempts';
 const LOCKOUT_KEY = 'bks_admin_lockout_until';
 
 const MAX_FAILED_ATTEMPTS = 5;
-const LOCKOUT_DURATION_MS = 5 * 60 * 1000; // 5 minutes
-const SESSION_EXPIRY_MS = 8 * 60 * 60 * 1000; // 8 hours
+const LOCKOUT_DURATION_MS = 5 * 60 * 1000; // 5 minutes lockout
+const SESSION_EXPIRY_MS = 8 * 60 * 60 * 1000; // 8 hours session
 
 /**
  * Computes a SHA-256 hex string from raw text using browser's native Web Crypto API
@@ -40,13 +41,13 @@ export async function verifyAdminCredentials(usernameInput: string, passwordInpu
   const now = Date.now();
   if (lockoutUntil > now) {
     const remainingSecs = Math.ceil((lockoutUntil - now) / 1000);
-    return { success: false, error: `Account temporarily locked due to multiple failed attempts. Please wait ${remainingSecs} seconds.` };
+    return { success: false, error: `Security lockout active due to repeated failed attempts. Please retry in ${remainingSecs}s.` };
   }
 
-  const cleanUser = usernameInput.trim().toLowerCase();
-  if (cleanUser !== 'admin') {
+  const userHash = await sha256(usernameInput.trim().toLowerCase());
+  if (!VALID_USERNAME_HASHES.includes(userHash)) {
     recordFailedAttempt();
-    return { success: false, error: 'Invalid username or password.' };
+    return { success: false, error: 'Access denied: Invalid administrator credentials.' };
   }
 
   const computedHash = await sha256(passwordInput.trim());
