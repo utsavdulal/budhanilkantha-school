@@ -68,12 +68,6 @@ export default function StJudeAdmissions() {
 
           <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 relative z-10">
             <div className="max-w-4xl space-y-4 sm:space-y-5">
-              
-              {/* Category Pill */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[#f5be38] text-xs uppercase tracking-[0.2em] font-bold">
-                <span className="w-2 h-2 rounded-full bg-[#f5be38] animate-pulse" />
-                <span>Admissions &amp; Enrollment · Academic Year 2081/2082</span>
-              </div>
 
               {/* Main Large Heading with Highlight Span */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-serif font-bold text-white tracking-tight leading-[1.15]">
@@ -111,166 +105,241 @@ export default function StJudeAdmissions() {
           {/* MAIN 2-COLUMN SECTION: FORM & ESSENTIAL INFO */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-2xl items-start">
             
-            {/* LEFT COLUMN: MINIMAL INQUIRY FORM */}
-            <div className="lg:col-span-7 bg-surface-container-lowest p-space-xl md:p-space-2xl rounded-2xl shadow-sm border border-outline-variant/40 space-y-space-lg">
-              <div className="border-b border-outline-variant/30 pb-space-sm">
-                <h2 className="font-headline-sm text-headline-sm text-primary font-serif">
-                  Online Admission Inquiry
+            {/* LEFT COLUMN: PROFESSIONAL INQUIRY FORM */}
+            <div className="lg:col-span-7 bg-surface-container-lowest p-6 sm:p-8 md:p-10 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-outline-variant/50 space-y-8">
+              
+              {/* Form Header */}
+              <div className="border-b border-outline-variant/40 pb-5">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-tertiary mb-1">
+                  <span className="material-symbols-outlined text-[18px]">edit_document</span>
+                  <span>Online Application</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-serif text-primary font-bold">
+                  Admission Inquiry Form
                 </h2>
-                <p className="text-body-sm text-on-surface-variant mt-1">
-                  Submit details below and our admissions team will contact you within 24 hours.
+                <p className="text-sm text-on-surface-variant mt-1.5 leading-relaxed">
+                  Fill in the details below. Our admissions officer will review your submission and contact you within <strong>24 business hours</strong>.
                 </p>
               </div>
 
               {submitted ? (
-                <div className="p-space-xl bg-green-50 border border-green-200 rounded-xl space-y-space-md animate-fadeIn">
-                  <div className="flex items-start gap-3">
-                    <span className="material-symbols-outlined text-[28px] text-green-600 shrink-0">check_circle</span>
-                    <div>
-                      <h3 className="font-headline-sm text-lg font-bold text-green-900">
+                <div className="p-6 sm:p-8 bg-green-50 border border-green-200 rounded-2xl space-y-5 animate-fadeIn">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                      <span className="material-symbols-outlined text-[32px] text-green-700">check_circle</span>
+                    </div>
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-bold text-green-950 font-serif">
                         Inquiry Submitted Successfully!
                       </h3>
-                      <p className="text-body-sm text-green-800 mt-1">
-                        Thank you, <strong>{formData.parentName}</strong>. We have received the admission application for <strong>{formData.studentName}</strong> for <strong>{formData.grade}</strong>.
+                      <p className="text-sm text-green-800 leading-relaxed">
+                        Thank you, <strong>{formData.parentName}</strong>. We have registered the application for <strong>{formData.studentName}</strong> for <strong>{formData.grade}</strong> ({formData.enrollmentType}).
                       </p>
-                      <p className="text-caption text-green-700 mt-2">
-                        Our admissions officer will contact you at <strong>{formData.phone}</strong> shortly.
-                      </p>
+                      <div className="p-3 bg-white/80 rounded-lg border border-green-200 text-xs text-green-900 space-y-1">
+                        <div>📞 Contact: <strong>{formData.phone}</strong> {formData.email ? `• ✉️ ${formData.email}` : ''}</div>
+                        <div>⏱️ Status: <strong>Pending Review by Admissions Officer</strong></div>
+                      </div>
                     </div>
                   </div>
-                  <div className="pt-2 border-t border-green-200">
+                  <div className="pt-3 border-t border-green-200 flex items-center justify-between">
+                    <span className="text-xs text-green-700 font-medium">Have urgent questions? Call 021-514168</span>
                     <button
                       type="button"
                       onClick={handleReset}
-                      className="px-4 py-2 bg-green-700 hover:bg-green-800 text-white rounded font-label-caps text-[11px] uppercase tracking-wider font-bold transition-all cursor-pointer"
+                      className="px-4 py-2 bg-green-700 hover:bg-green-800 text-white rounded-lg text-xs uppercase tracking-wider font-bold transition-all shadow-sm cursor-pointer"
                     >
-                      Submit Another Inquiry
+                      New Inquiry
                     </button>
                   </div>
                 </div>
               ) : (
-                <form className="space-y-space-md" onSubmit={handleSubmit}>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
-                    <div>
-                      <label className="block font-label-caps text-caption text-secondary uppercase tracking-wider mb-1 font-semibold">
-                        Parent / Guardian Name *
-                      </label>
-                      <input
-                        className="w-full h-11 px-space-md bg-surface border border-outline-variant/60 rounded-lg font-body-sm text-body-sm text-primary focus:outline-none focus:border-primary transition-colors"
-                        placeholder="e.g. Ramesh Shrestha"
-                        required
-                        type="text"
-                        value={formData.parentName}
-                        onChange={(e) => setFormData({ ...formData, parentName: e.target.value })}
-                      />
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                  
+                  {/* Section 1: Guardian Details */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-secondary border-b border-outline-variant/30 pb-2">
+                      <span className="material-symbols-outlined text-[16px] text-primary">person</span>
+                      <span>1. Parent / Guardian Information</span>
                     </div>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-semibold text-on-surface mb-1.5">
+                          Parent / Guardian Full Name <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <span className="material-symbols-outlined absolute left-3.5 top-3 text-[18px] text-on-surface-variant/60 pointer-events-none">badge</span>
+                          <input
+                            className="w-full h-11 pl-10 pr-3.5 bg-surface border border-outline-variant/60 rounded-xl text-sm text-primary placeholder:text-on-surface-variant/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm"
+                            placeholder="e.g. Ramesh Shrestha"
+                            required
+                            type="text"
+                            value={formData.parentName}
+                            onChange={(e) => setFormData({ ...formData, parentName: e.target.value })}
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-on-surface mb-1.5">
+                          Mobile Phone Number <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <span className="material-symbols-outlined absolute left-3.5 top-3 text-[18px] text-on-surface-variant/60 pointer-events-none">phone</span>
+                          <input
+                            className="w-full h-11 pl-10 pr-3.5 bg-surface border border-outline-variant/60 rounded-xl text-sm text-primary placeholder:text-on-surface-variant/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm"
+                            placeholder="98XXXXXXXX / 021-XXXXXX"
+                            required
+                            type="tel"
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
                     <div>
-                      <label className="block font-label-caps text-caption text-secondary uppercase tracking-wider mb-1 font-semibold">
-                        Phone Number *
+                      <label className="block text-xs font-semibold text-on-surface mb-1.5">
+                        Email Address <span className="text-on-surface-variant/60 font-normal">(Optional for updates)</span>
                       </label>
-                      <input
-                        className="w-full h-11 px-space-md bg-surface border border-outline-variant/60 rounded-lg font-body-sm text-body-sm text-primary focus:outline-none focus:border-primary transition-colors"
-                        placeholder="98XXXXXXXX / 021-XXXXXX"
-                        required
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      />
+                      <div className="relative">
+                        <span className="material-symbols-outlined absolute left-3.5 top-3 text-[18px] text-on-surface-variant/60 pointer-events-none">mail</span>
+                        <input
+                          className="w-full h-11 pl-10 pr-3.5 bg-surface border border-outline-variant/60 rounded-xl text-sm text-primary placeholder:text-on-surface-variant/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm"
+                          placeholder="parent.email@example.com"
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
-                    <div>
-                      <label className="block font-label-caps text-caption text-secondary uppercase tracking-wider mb-1 font-semibold">
-                        Child's Full Name *
-                      </label>
-                      <input
-                        className="w-full h-11 px-space-md bg-surface border border-outline-variant/60 rounded-lg font-body-sm text-body-sm text-primary focus:outline-none focus:border-primary transition-colors"
-                        placeholder="Student Full Name"
-                        required
-                        type="text"
-                        value={formData.studentName}
-                        onChange={(e) => setFormData({ ...formData, studentName: e.target.value })}
-                      />
+                  {/* Section 2: Student Details */}
+                  <div className="space-y-4 pt-2">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-secondary border-b border-outline-variant/30 pb-2">
+                      <span className="material-symbols-outlined text-[16px] text-primary">school</span>
+                      <span>2. Student &amp; Academic Enrollment</span>
                     </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-semibold text-on-surface mb-1.5">
+                          Child's Full Name <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <span className="material-symbols-outlined absolute left-3.5 top-3 text-[18px] text-on-surface-variant/60 pointer-events-none">face</span>
+                          <input
+                            className="w-full h-11 pl-10 pr-3.5 bg-surface border border-outline-variant/60 rounded-xl text-sm text-primary placeholder:text-on-surface-variant/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm"
+                            placeholder="Student Full Name"
+                            required
+                            type="text"
+                            value={formData.studentName}
+                            onChange={(e) => setFormData({ ...formData, studentName: e.target.value })}
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-on-surface mb-1.5">
+                          Applying For Grade <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <span className="material-symbols-outlined absolute left-3.5 top-3 text-[18px] text-on-surface-variant/60 pointer-events-none">grade</span>
+                          <select
+                            value={formData.grade}
+                            onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
+                            className="w-full h-11 pl-10 pr-8 bg-surface border border-outline-variant/60 rounded-xl text-sm text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm appearance-none cursor-pointer"
+                          >
+                            <option>Playgroup (PG)</option>
+                            <option>Nursery</option>
+                            <option>LKG</option>
+                            <option>UKG</option>
+                            <option>Grade 1</option>
+                            <option>Grade 2</option>
+                            <option>Grade 3</option>
+                            <option>Grade 4</option>
+                            <option>Grade 5</option>
+                            <option>Grade 6</option>
+                            <option>Grade 7</option>
+                            <option>Grade 8</option>
+                            <option>Grade 9</option>
+                            <option>Grade 10 (SEE)</option>
+                          </select>
+                          <span className="material-symbols-outlined absolute right-3 top-3 text-[18px] text-on-surface-variant/60 pointer-events-none">expand_more</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Enrollment Type Choice */}
                     <div>
-                      <label className="block font-label-caps text-caption text-secondary uppercase tracking-wider mb-1 font-semibold">
-                        Applying for Grade *
+                      <label className="block text-xs font-semibold text-on-surface mb-2">
+                        Enrollment Preference
                       </label>
-                      <select
-                        value={formData.grade}
-                        onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
-                        className="w-full h-11 px-space-md bg-surface border border-outline-variant/60 rounded-lg font-body-sm text-body-sm text-primary focus:outline-none focus:border-primary transition-colors"
-                      >
-                        <option>Playgroup (PG)</option>
-                        <option>Nursery</option>
-                        <option>LKG</option>
-                        <option>UKG</option>
-                        <option>Grade 1</option>
-                        <option>Grade 2</option>
-                        <option>Grade 3</option>
-                        <option>Grade 4</option>
-                        <option>Grade 5</option>
-                        <option>Grade 6</option>
-                        <option>Grade 7</option>
-                        <option>Grade 8</option>
-                        <option>Grade 9</option>
-                        <option>Grade 10 (SEE)</option>
-                      </select>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, enrollmentType: 'Day Scholar' })}
+                          className={`p-3 rounded-xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
+                            formData.enrollmentType === 'Day Scholar'
+                              ? 'bg-primary-container text-on-primary border-primary shadow-sm font-semibold'
+                              : 'bg-surface border-outline-variant/60 text-on-surface hover:bg-surface-container'
+                          }`}
+                        >
+                          <span className="material-symbols-outlined text-[20px]">directions_bus</span>
+                          <div>
+                            <div className="text-xs font-bold">Day Scholar</div>
+                            <div className={`text-[11px] ${formData.enrollmentType === 'Day Scholar' ? 'text-slate-200' : 'text-on-surface-variant'}`}>Daily school commute</div>
+                          </div>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, enrollmentType: 'Hostel / Boarding Student' })}
+                          className={`p-3 rounded-xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
+                            formData.enrollmentType === 'Hostel / Boarding Student'
+                              ? 'bg-primary-container text-on-primary border-primary shadow-sm font-semibold'
+                              : 'bg-surface border-outline-variant/60 text-on-surface hover:bg-surface-container'
+                          }`}
+                        >
+                          <span className="material-symbols-outlined text-[20px]">hotel</span>
+                          <div>
+                            <div className="text-xs font-bold">Boarding / Hostel</div>
+                            <div className={`text-[11px] ${formData.enrollmentType === 'Hostel / Boarding Student' ? 'text-slate-200' : 'text-on-surface-variant'}`}>Full residential care</div>
+                          </div>
+                        </button>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
-                    <div>
-                      <label className="block font-label-caps text-caption text-secondary uppercase tracking-wider mb-1 font-semibold">
-                        Enrollment Type
-                      </label>
-                      <select
-                        value={formData.enrollmentType}
-                        onChange={(e) => setFormData({ ...formData, enrollmentType: e.target.value })}
-                        className="w-full h-11 px-space-md bg-surface border border-outline-variant/60 rounded-lg font-body-sm text-body-sm text-primary focus:outline-none focus:border-primary transition-colors"
-                      >
-                        <option>Day Scholar</option>
-                        <option>Hostel / Boarding Student</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block font-label-caps text-caption text-secondary uppercase tracking-wider mb-1 font-semibold">
-                        Email Address (Optional)
-                      </label>
-                      <input
-                        className="w-full h-11 px-space-md bg-surface border border-outline-variant/60 rounded-lg font-body-sm text-body-sm text-primary focus:outline-none focus:border-primary transition-colors"
-                        placeholder="parent@example.com"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block font-label-caps text-caption text-secondary uppercase tracking-wider mb-1 font-semibold">
-                      Questions / Additional Notes
+                  {/* Section 3: Questions / Notes */}
+                  <div className="space-y-2 pt-2">
+                    <label className="block text-xs font-semibold text-on-surface">
+                      Specific Questions or Previous Academic Background <span className="text-on-surface-variant/60 font-normal">(Optional)</span>
                     </label>
                     <textarea
                       rows={3}
                       value={formData.notes}
                       onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                      className="w-full p-space-md bg-surface border border-outline-variant/60 rounded-lg font-body-sm text-body-sm text-primary focus:outline-none focus:border-primary transition-colors resize-none"
-                      placeholder="Tell us about previous school or any specific questions..."
+                      className="w-full p-3.5 bg-surface border border-outline-variant/60 rounded-xl text-sm text-primary placeholder:text-on-surface-variant/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none shadow-sm"
+                      placeholder="Please let us know your child's previous school, extracurricular interests, or any specific queries..."
                     ></textarea>
                   </div>
 
-                  <div className="pt-space-xs flex items-center justify-between">
+                  {/* Submit Button & Security Guarantee */}
+                  <div className="pt-3 border-t border-outline-variant/30 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <button
-                      className="h-12 px-space-xl bg-primary-container hover:bg-primary text-on-primary font-label-caps text-[11px] uppercase tracking-widest rounded-lg transition-all shadow-md active:scale-[0.99] font-bold cursor-pointer"
+                      className="w-full sm:w-auto h-12 px-8 bg-primary hover:bg-primary-container text-on-primary font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
                       type="submit"
                     >
-                      Submit Admissions Inquiry
+                      <span>Submit Admission Inquiry</span>
+                      <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                     </button>
-                    <span className="text-caption font-caption text-secondary hidden sm:inline">
-                      Direct Helpline: <strong>021-514168</strong>
-                    </span>
+                    
+                    <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
+                      <span className="material-symbols-outlined text-[16px] text-green-600">verified_user</span>
+                      <span>100% Confidential &amp; Direct</span>
+                    </div>
                   </div>
                 </form>
               )}
